@@ -14,6 +14,7 @@ class TestTicTacToe(unittest.TestCase):
         self.x = "X"
         self.o = "O"
         self.game = start_new_game(self.x, self.o)
+        self.maxDiff = None
 
     def test_start_new_game(self):
         game = start_new_game(self.x, self.o)
