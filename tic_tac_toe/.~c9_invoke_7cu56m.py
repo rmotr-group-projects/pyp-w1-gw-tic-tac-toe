@@ -30,13 +30,10 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    try:
-        if len(position) != 2:
-            return False
-        x, y = position
-        return x in (0,1,2) and y in (0,1,2)
-    except TypeError:
+    if len(position) != 2:
         return False
+    x, y = position
+    return x in (0,1,2) and y in (0,1,2)
 
 
 def _board_is_full(board):
@@ -203,14 +200,13 @@ def get_board_as_string(game):
     Returns a string representation of the game board in the current state.
     """
     board = game['board']
-    image = '"""' + "\n"
+    image
     image += "{}  |  {}  |  {}\n".format(board[0][0],board[0][1],board[0][2])
-    image += "--------------\n"
+    image += "-------------\n"
     image += "{}  |  {}  |  {}\n".format(board[1][0],board[1][1],board[1][2])
-    image += "--------------\n"
+    image += "-------------\n"
     image += "{}  |  {}  |  {}\n".format(board[2][0],board[2][1],board[2][2])
-    image += "\n" + '"""'
- 
+    return ('"""/n + image + /n'""")
     return image
 
 def get_next_turn(game):
