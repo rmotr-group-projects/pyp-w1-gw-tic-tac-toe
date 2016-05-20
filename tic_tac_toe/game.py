@@ -1,5 +1,4 @@
 from exceptions import *
-print("hey")
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -85,13 +84,14 @@ def _is_winning_combination(board, combination, player):
     
     count = 0
     for position in combination:
-        if board[[position[0]][position[1]]] == player:
-            count += 1
-    return count == 3
+        if board[position[0]][position[1]] == player:
+            count = count + 1
+            if count == 3:
+                return True
+    return False 
     
             
         
-
 def _check_winning_combinations(board, player):
     """
     There are 8 posible combinations (3 horizontals, 3, verticals and 2 diagonals)
@@ -117,9 +117,9 @@ def _check_winning_combinations(board, player):
         ]        
         
     for combo in winning_combos:
-        if player == _if_winning_combination(board, combo, player):
+        if _is_winning_combination(board, combo, player) == True:
             return player
-        return None
+    return None
             
     
     """
@@ -168,9 +168,7 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    
     board = game['board']
-    
     next_player = get_next_turn(game)
     if _position_is_valid(position) != True:
         raise InvalidMovement("Position out of range.")
@@ -182,12 +180,18 @@ def move(game, player, position):
         x = position[0]
         y = position[1]
         game['board'][x][y] = player
+    if player == "X":
+        game['next_turn'] = "O"
+    else:
+        game['next_turn'] = "X"
+    game['winner'] = _check_winning_combinations(board, player)
+    winner = get_winner(game)
+    if winner != None:
+        raise GameOver((winner, " wins!"))
     if _board_is_full(board) == True:
-        winner = get_winner(game)
-        if winner == None:
-            raise GameOver("Game is tied!")
-        else:
-            raise GameOver((winner, " wins!"))
+        raise GameOver("Game is tied!")
+    
+
    # raise  GameOver((player, " wins!"))     
 
 
@@ -218,11 +222,11 @@ game = {
     'player1': "X",
     'player2': "O",
     'board': [
-        ["X", "O", "X"],
-        ["O", "O", "-"],
-        ["X", "O", "X"],
+        ["-", "-", "X"],
+        ["-", "-", "X"],
+        ["-", "-", "-"],
     ],
-    'next_turn': "O",
+    'next_turn': "X",
     'winner': None
 }
 
@@ -233,5 +237,5 @@ game = {
 #print(_is_winning_combination(game['board'], combination, 'X'))
 player1="X"
 player2="O"
-move(game,player1,(1,2))
+move(game,player1,(2,2))
 
