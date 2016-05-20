@@ -30,8 +30,7 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    #print(position)
-    if not isinstance(position,tuple): return False
+    print(position)
     
     if len(position) != 2:
         return False
@@ -190,7 +189,7 @@ def move(game, player, position):
     game['winner'] = _check_winning_combinations(board, player)
     winner = get_winner(game)
     if winner != None:
-        raise GameOver('"{}" wins!'.format(winner))
+        raise GameOver(winner + " wins!")
     if _board_is_full(board) == True:
         raise GameOver("Game is tied!")
     
