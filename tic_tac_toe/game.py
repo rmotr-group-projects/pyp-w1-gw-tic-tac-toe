@@ -1,4 +1,5 @@
 from exceptions import *
+print("hey")
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -60,7 +61,7 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    
+    """
     winning_combos = [
         (1,2,3),
         (4,5,6),
@@ -80,13 +81,14 @@ def _is_winning_combination(board, combination, player):
         if count == 3:
             return "you won"
     return "you didnt win"
+    """
     
-    '''
     count = 0
     for position in combination:
         if board[[position[0]][position[1]]] == player:
             count += 1
-    '''
+    return count == 3
+    
             
         
 
@@ -103,18 +105,6 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    pass
-    combination = []
-    num = 1
-    for i in range(3):
-        for j in range(3):
-            #print num
-            if board[i][j] == player:
-                combination.append(num)
-            num += 1
-        
-    return combination
-"""
     winning_combos = [
         [(0,0),(0,1),(0,2)],
         [(1,0),(1,1),(1,2)],
@@ -125,7 +115,28 @@ def _check_winning_combinations(board, player):
         [(0,0),(1,1),(2,2)],
         [(0,2),(1,1),(2,0)]
         ]        
-"""
+        
+    for combo in winning_combos:
+        if player == _if_winning_combination(board, combo, player):
+            return player
+        return None
+            
+    
+    """
+    combination = []
+    num = 1
+    for i in range(3):
+        for j in range(3):
+            #print num
+            if board[i][j] == player:
+                combination.append(num)
+            num += 1
+        
+    return combination
+    """
+
+   
+
 # public interface
 def start_new_game(player1, player2):
     """
@@ -157,8 +168,9 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
+    
     board = game['board']
-    winner = get_winner(game)
+    
     next_player = get_next_turn(game)
     if _position_is_valid(position) != True:
         raise InvalidMovement("Position out of range.")
@@ -171,23 +183,13 @@ def move(game, player, position):
         y = position[1]
         game['board'][x][y] = player
     if _board_is_full(board) == True:
+        winner = get_winner(game)
         if winner == None:
             raise GameOver("Game is tied!")
         else:
             raise GameOver((winner, " wins!"))
    # raise  GameOver((player, " wins!"))     
-    '''
-    GameOver, "Game is tied"
-            with self.assertRaisesRegexp(GameOver, '"O" wins!'):
 
-        with self.assertRaisesRegexp(InvalidMovement, 'Game is over'):
-
-        with self.assertRaisesRegexp(InvalidMovement, '"O" moves next'):
-  
-                                     'Position out of range.'):
-     
-                                     'Position already taken.'):
-    '''
 
 def get_board_as_string(game):
     """
@@ -220,7 +222,7 @@ game = {
         ["O", "O", "-"],
         ["X", "O", "X"],
     ],
-    'next_turn': "X",
+    'next_turn': "O",
     'winner': None
 }
 
@@ -229,6 +231,7 @@ game = {
 #print(_board_is_full(game['board']))
 #combination = _check_winning_combinations(game['board'], 'X')
 #print(_is_winning_combination(game['board'], combination, 'X'))
-player1='X'
-player2='O'
+player1="X"
+player2="O"
 move(game,player1,(1,2))
+
