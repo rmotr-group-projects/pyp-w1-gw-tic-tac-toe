@@ -166,19 +166,28 @@ def get_winner(game):
     
 
 def move(game, player, position):
+    
     """
     Performs a player movement in the game. Must ensure all the pre requisites
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
+    
+    winner = get_winner(game)
     board = game['board']
     next_player = get_next_turn(game)
-    if _position_is_valid(position) != True:
+    
+    if not _position_is_valid(position):
         raise InvalidMovement("Position out of range.")
-    elif _position_is_empty_in_board(position, board) != True:
+    elif winner or _board_is_full(board): raise InvalidMovement("Game is over.")
+    #elif _board_is_full(board): raise InvalidMovement("Game is over.")
+    #    raise GameOver("Game is over.")
+    #    return
+    elif not _position_is_empty_in_board(position, board):
         raise InvalidMovement("Position already taken.")
     elif player != next_player:
-        raise InvalidMovement((next_player, " moves next"))
+        #raise InvalidMovement((next_player, " moves next"))
+        raise InvalidMovement('"{}" moves next'.format(next_player))
     else:
         x = position[0]
         y = position[1]
@@ -189,13 +198,13 @@ def move(game, player, position):
         game['next_turn'] = "X"
     game['winner'] = _check_winning_combinations(board, player)
     winner = get_winner(game)
-    if winner != None:
+    if winner:
         raise GameOver('"{}" wins!'.format(winner))
     if _board_is_full(board) == True:
         raise GameOver("Game is tied!")
     
 
-   # raise  GameOver((player, " wins!"))     
+   #raise  GameOver((player, " wins!"))     
 
 
 def get_board_as_string(game):
