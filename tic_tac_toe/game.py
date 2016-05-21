@@ -83,6 +83,7 @@ def _check_winning_combinations(board, player):
     horizontal_positions = [[(y, x) for x in range(3)] for y in range(3)]
     diagonal_positions = [[(i, i) for i in range(3)], [(2, 0), (1, 1), (0, 2)]]
     combinations = vertical_positions + diagonal_positions  + horizontal_positions
+    
     for combination in combinations:
         if _is_winning_combination(board, combination, player):
             return player
@@ -93,18 +94,6 @@ def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     
-    {
-    'player1': "X",
-    'player2': "O",
-    'board': [
-        ["-", "-", "-"],
-        ["-", "-", "-"],
-        ["-", "-", "-"],
-    ],
-    'next_turn': "X",
-    'winner': None
-}
-
     """
     board = [["-" for _ in range(3)]for a in range(3)]
     return {
@@ -152,9 +141,11 @@ def move(game, player, position):
     
     if _check_winning_combinations(game['board'], player):
         game['winner'] = player
+        game['next_turn'] = None
         raise GameOver('"{0}" wins!'.format(game['winner']))
         
     if _board_is_full(game['board']):
+        game['next_turn'] = None
         raise GameOver('Game is tied!')
 
 
@@ -171,6 +162,5 @@ def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    if _board_is_full(game['board']) or game['winner']:
-        return None
+
     return game['next_turn']
