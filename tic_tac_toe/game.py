@@ -1,3 +1,5 @@
+from .exceptions import InvalidMovement, GameOver
+
 # internal helpers
 def _position_is_empty_in_board(position, board):
     """
@@ -9,7 +11,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    pass
+    return board[position[0]][position[1]] == "-"
 
 
 def _position_is_valid(position):
@@ -24,7 +26,10 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    pass
+    if not isinstance(position, tuple) or len(position) != 2 or not isinstance(position[0], int) or not isinstance(position[1], int):
+        return False
+        
+    return 0 <= position[0] <= 2 and 0 <= position[1] <= 2
 
 
 def _board_is_full(board):
@@ -33,7 +38,10 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    pass
+    for row in board:
+        if "-" in row:
+            return False
+    return True
 
 
 def _is_winning_combination(board, combination, player):
@@ -47,7 +55,10 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    pass
+    for comb in combination:
+        if board[comb[0]][comb[1]] != player:
+            return False
+    return True
 
 
 def _check_winning_combinations(board, player):
@@ -63,7 +74,14 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    pass
+    for i in range(3):
+        if _is_winning_combination(board, ((i,0), (i,1), (i,2)), player) or _is_winning_combination(board, ((0,i), (1,i), (2,i)), player):
+            return player
+    
+    if _is_winning_combination(board, ((0,0), (1,1), (2,2)), player) or _is_winning_combination(board, ((0,2), (1,1), (2,0)), player):
+        return player
+        
+    return None
 
 
 # public interface
@@ -71,14 +89,16 @@ def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    pass
+    board = [["-" for i in range(3)] for j in range(3)]
+    return { "board":board, "player1": player1, "player2": player2, "winner": None, "next_turn": "X" }
 
 
 def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
     """
-    pass
+    return game["winner"]
+    
 
 
 def move(game, player, position):
@@ -87,18 +107,46 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    pass
+    if _board_is_full(game["board"]) or get_winner(game) is not None:
+        raise InvalidMovement("Game is over.")
+        
+    if not game["next_turn"] == player:
+        raise InvalidMovement('"{}" moves next'.format(game["next_turn"]))
+        
+    if not _position_is_valid(position):
+        raise InvalidMovement("Position out of range.")
+    
+    if not _position_is_empty_in_board(position, game["board"]):
+        raise InvalidMovement("Position already taken.")
+    
+    game["board"][position[0]][position[1]] = player
+        
+    if _board_is_full(game["board"]):
+        raise GameOver("Game is tied!")
+        
+    if _check_winning_combinations(game["board"], player):
+        game['winner'] = player
+        raise GameOver('"{}" wins!'.format(player))
+    
+    if game["player1"] == player:
+        game["next_turn"] = game["player2"]
+    else:
+        game["next_turn"] =  game["player1"]
+    
 
 
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    pass
+    string = [ "  |  ".join(row) + "\n" for row in game["board"]]
+    dash = "-" * len(string[0]) + "\n"
+    
+    return "\n" + dash.join(string)
 
 
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    pass
+    return game['next_turn']
