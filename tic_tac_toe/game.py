@@ -126,13 +126,11 @@ def move(game, player, position):
     After registering the movement it must check if the game is over.
     """
     
-    #If the board is full
-    if _board_is_full(game["board"]):
+    #If the board is full, or we have a winner already
+    if _board_is_full(game["board"]) or game["winner"]:
         raise InvalidMovement("Game is over.")
         
     #If it's not this player's turn
-    print player
-    print get_next_turn((game))
     if get_next_turn(game) != player:
         raise InvalidMovement('"{}" moves next.'.format(get_next_turn(game)))
     
@@ -153,13 +151,14 @@ def move(game, player, position):
     
     #If player wins, update the winner and raise GameOver
     if _check_winning_combinations(game["board"], player):
-        game["next_turn"] = None
+       # game["next_turn"] = None
         game["winner"] = player
         raise GameOver('"' + player + '" wins!')
         
     #If the board is full after the move, it's a tie
     if _board_is_full(game["board"]):
-        game["next_turn"] = None
+        # game["next_turn"] = None
+        game["winner"] = None
         raise GameOver("Game is tied!")
 
 
@@ -168,10 +167,10 @@ def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    return "\n--------------\n".join([
+    return "\n"+("\n--------------\n".join([
         "  |  ".join([cell for cell in row ])
         for row in game["board"]
-    ])
+    ]))+"\n"
 
 
 def get_next_turn(game):
