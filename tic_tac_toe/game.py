@@ -177,5 +177,5 @@ def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    return game["next_turn"]
+    return game["next_turn"] if not game["winner"] else None
 
