@@ -1,5 +1,4 @@
-from .exceptions import *
-
+# internal helpers
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -10,7 +9,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    #verify row in position[0] and column in position[1] is ""
+    #need to verify this is the right order
     return board[position[0]][position[1]] == "-"
 
 
@@ -27,13 +26,10 @@ def _position_is_valid(position):
     Returns True if given position is valid, False otherwise.
     """
     # run through tuple and check against set of 0,1,2
-    valid = [0,1,2]
-    if type(position) != tuple:
-        return False
-    elif len(position)==2:
-        a, b = position
-        return a in valid and b in valid
-    return False
+    for i in position:
+        if i not in {0,1,2}:
+            return False
+    return True
 
 
 def _board_is_full(board):
@@ -90,7 +86,7 @@ def _check_winning_combinations(board, player):
     if _is_winning_combination(board, ((0,0),(1,1),(2,2)), player) or _is_winning_combination(board, ((0,2),(1,1),(2,0)), player):
         return player
         
-    return None        
+    return "None"        
 
 # public interface
 
@@ -100,8 +96,8 @@ def start_new_game(player1, player2):
     Creates and returns a new game configuration.
     """
     gamedict = {
-    'player1': "X",
-    'player2': "O",
+    player1: "X",
+    player2: "O",
     'board': [
         ["-", "-", "-"],
         ["-", "-", "-"],
@@ -117,14 +113,10 @@ def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
     """
-    
-    #heck_winning_combinations(board, player):
     if _check_winning_combinations(game['board'],game['player1']) == game['player1']:
-        game['winner'] = game['player1']
-        return game['winner']
-    elif _check_winning_combinations(game['board'],game['player2']) == game['player2']:
-        game['winner'] = game['player2']
-        return game['winner']
+        return game['player1']
+    elif _check_winning_combinations(game['board'],game['player2']) == game['player1']:
+        return game['player2']
     else:
         return None
         
@@ -138,62 +130,57 @@ def move(game, player, position):
     After registering the movement it must check if the game is over.
     """
 
+    #check initial if game over
     if get_winner(game) != None:
-        raise InvalidMovement("Game is over")  
+        print("GameOver: {} wins!".format(game['winner']))
+    elif _board_is_full(game['board']):
+        print("GameOver: Game is tied!")
+    
+    #check valid turn
+    if game['next_turn'] != player:
+        print("InvalidMovement: {}  moves next.".format(game['next_turn']))
+        return
 
-    if _board_is_full(game['board']) and get_winner(game) == None:
-        raise InvalidMovement("Game is over.")  
-
-    if game['next_turn'] == player:
-        pass
+    #check valid move
+        print("GameOver: {} wins!". (player)
+        if _position_is_empty_in_board(position, game['board']):
+            pass
+        else:
+            print("InvalidMovement: Position already taken")
     else:
-        raise InvalidMovement("\"{}\" moves next".format(game['next_turn']))
-  
- 
-    if not _position_is_valid(position):
-        raise InvalidMovement("Position out of range.")
-    if not _position_is_empty_in_board(position, game['board']):
-        raise InvalidMovement("Position already taken.")
-#    if get_next_turn(game) != player:
-#    raise InvalidMovement("{} moves next".format(player))
+        print("InvalidMovement: Position out of range.")
+      
+    #make move changing to X/O depending on player
+
+    game['board'][position[0]][position[1]] = player
     
-    x, y = position            
-    game['board'][x][y] = player
-   
-    if _board_is_full(game['board']) and get_winner(game) == None:
-            raise GameOver("Game is tied!")   
-    
+    # need to check for ties
+    #check to see if player wins
     if get_winner(game) != None:
-        raise GameOver("\"{}\" wins!".format(game['winner']))
-        
-    if player == "X":
-        game['next_turn']="O"
-    else:
-        game['next_turn']="X"
+        print("GameOver: {} wins!".format(game['winner']))
+    elif _board_is_full(game['board']):
+        print("GameOver: Game is tied!")
     
-        
-            
 
+    #change turn
     
-    
+
+
+
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    rep = ''
-    i = 0 
-    for row in game['board']:
-        rep+=('  |  '.join(row)) + '\n'
-        if i<2:
-            rep+=('--------------\n') 
-            i+=1
-    return '\n' + rep
+    print(' | '.join(game['board'][0]))
+    print('--------------')
+    print(' | '.join(game['board'][1]))
+    print('--------------')
+    print(' | '.join(game['board'][2]))
+    
 
 
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    if not _board_is_full(game['board']):
-        return game['next_turn']
-    return None
+    pass

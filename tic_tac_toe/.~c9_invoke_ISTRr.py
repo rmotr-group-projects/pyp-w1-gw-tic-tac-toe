@@ -1,5 +1,4 @@
-from .exceptions import *
-
+# internal helpers
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -10,7 +9,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    #verify row in position[0] and column in position[1] is ""
+    #need to verify this is the right order
     return board[position[0]][position[1]] == "-"
 
 
@@ -121,10 +120,10 @@ def get_winner(game):
     #heck_winning_combinations(board, player):
     if _check_winning_combinations(game['board'],game['player1']) == game['player1']:
         game['winner'] = game['player1']
-        return game['winner']
+        return game['player1']
     elif _check_winning_combinations(game['board'],game['player2']) == game['player2']:
         game['winner'] = game['player2']
-        return game['winner']
+        return game['player2']
     else:
         return None
         
@@ -138,44 +137,45 @@ def move(game, player, position):
     After registering the movement it must check if the game is over.
     """
 
-    if get_winner(game) != None:
-        raise InvalidMovement("Game is over")  
 
-    if _board_is_full(game['board']) and get_winner(game) == None:
-        raise InvalidMovement("Game is over.")  
-
-    if game['next_turn'] == player:
+    if get_next_turn(game) == player:
+        
+        if _position_is_valid(position):
+            x, y = position
+            if _position_is_empty_in_board(position, game['board']):
+                game['board'][x][y] = player
+        
+        return get_winner(game)
+    else:
         pass
-    else:
-        raise InvalidMovement("\"{}\" moves next".format(game['next_turn']))
-  
- 
-    if not _position_is_valid(position):
-        raise InvalidMovement("Position out of range.")
-    if not _position_is_empty_in_board(position, game['board']):
-        raise InvalidMovement("Position already taken.")
-#    if get_next_turn(game) != player:
-#    raise InvalidMovement("{} moves next".format(player))
+
+    # #check initial if game over
+    # if get_winner(game) != None:
+    #     print("GameOver: {} wins!".format(game['winner']))
+    # elif _board_is_full(game['board']):
+    #     print("GameOver: Game is tied!")
     
-    x, y = position            
-    game['board'][x][y] = player
-   
-    if _board_is_full(game['board']) and get_winner(game) == None:
-            raise GameOver("Game is tied!")   
-    
-    if get_winner(game) != None:
-        raise GameOver("\"{}\" wins!".format(game['winner']))
-        
-    if player == "X":
-        game['next_turn']="O"
-    else:
-        game['next_turn']="X"
-    
-        
-            
+    # #check valid turn
+    # if game['next_turn'] != player:
+    #     #print("InvalidMovement: {}  moves next.".format(game['next_turn']))
+    #     raise AssertionError("InvalidMovement: {} moves next.".format(game['next_turn']))
+
+    # #check valid move
+    # if _position_is_valid(position):
+    #     if _position_is_empty_in_board(position, game['board']):
+    #         game['board'][position[0]][position[1]] = player
+    #     else:
+    #         print("InvalidMovement: Position already taken")
+    # else:
+    #     print("InvalidMovement: Position out of range.")
+      
+    # #make move changing to X/O depending on player
 
     
-    
+
+
+
+
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
