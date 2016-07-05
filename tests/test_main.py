@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
+from .data_for_tests import (valid_positions, invalid_positions, boards)
 from tic_tac_toe import (
     start_new_game, get_board_as_string, move, get_winner,
     get_next_turn, _position_is_valid, _position_is_empty_in_board,
@@ -31,28 +32,17 @@ class TestTicTacToe(unittest.TestCase):
         self.assertEqual(game, expected)
 
     def test_is_valid_position(self):
-        valid_positions = [
-            (0,0), (0,1), (0,2),
-            (1,0), (1,1), (1,2),
-            (2,0), (2,1), (2,2),
-        ]
         for position in valid_positions:
             self.assertTrue(_position_is_valid(position))
 
     def test_is_valid_position_invalid(self):
-        invalid_positions = [
-            (2,3), (3,2), (3,3), (9,9), (-1,-1), 1, "something", False, (0,0,0)
-        ]
+
         for position in invalid_positions:
             self.assertFalse(_position_is_valid(position))
 
     def test_is_empty_position(self):
         board = self.game['board']
-        empty_positions = [
-            (0,0), (0,1), (0,2),
-            (1,0), (1,1), (1,2),
-            (2,0), (2,1), (2,2),
-        ]
+        empty_positions = valid_positions
         for position in empty_positions:
             self.assertTrue(_position_is_empty_in_board(position, board))
         board[0][1] = self.x
@@ -60,134 +50,24 @@ class TestTicTacToe(unittest.TestCase):
 
 
     def test_is_board_complete(self):
-        self.game['board'] = [
-            ["X", "O", "O"],
-            ["O", "X", "X"],
-            ["O", "X", "O"],
-        ]
+        self.game['board'] = boards["no-winner"]
         self.assertTrue(_board_is_full(self.game['board']))
 
     def test_is_board_complete_false(self):
-        self.game['board'] = [
-            ["X", "O", "O"],
-            ["O", "-", "-"],
-            ["O", "X", "O"],
-        ]
+        self.game['board'] = boards["incomplete-board"]
         self.assertFalse(_board_is_full(self.game['board']))
 
     def test_check_win_no_winner(self):
-        board = [
-            ["X", "O", "O"],
-            ["O", "X", "X"],
-            ["O", "X", "O"],
-        ]
+        board = boards["no-winner"]
         self.assertEqual(_check_winning_combinations(board, self.x), None)
 
     def test_check_win_X_wins(self):
-        # diagonals
-        board = [
-            ["X", "O", "O"],
-            ["O", "X", "X"],
-            ["O", "O", "X"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.x), "X")
-        board = [
-            ["O", "O", "X"],
-            ["O", "X", "X"],
-            ["X", "O", "O"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.x), "X")
-        # horizontals
-        board = [
-            ["X", "X", "X"],
-            ["X", "O", "O"],
-            ["O", "O", "X"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.x), "X")
-        board = [
-            ["X", "O", "O"],
-            ["X", "X", "X"],
-            ["O", "O", "X"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.x), "X")
-        board = [
-            ["X", "O", "O"],
-            ["O", "O", "X"],
-            ["X", "X", "X"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.x), "X")
-        # verticals
-        board = [
-            ["X", "O", "X"],
-            ["O", "O", "X"],
-            ["O", "X", "X"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.x), "X")
-        board = [
-            ["X", "X", "O"],
-            ["O", "X", "O"],
-            ["O", "X", "X"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.x), "X")
-        board = [
-            ["X", "X", "O"],
-            ["X", "O", "O"],
-            ["X", "O", "X"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.x), "X")
+        for board in boards["winner-x"]:
+            self.assertEqual(_check_winning_combinations(board, self.x), "X")
 
     def test_check_win_O_wins(self):
-        # diagonals
-        board = [
-            ["O", "X", "X"],
-            ["X", "O", "O"],
-            ["X", "X", "O"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.o), "O")
-        board = [
-            ["X", "X", "O"],
-            ["X", "O", "O"],
-            ["O", "X", "X"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.o), "O")
-        # horizontals
-        board = [
-            ["O", "O", "O"],
-            ["O", "X", "X"],
-            ["X", "X", "O"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.o), "O")
-        board = [
-            ["O", "X", "X"],
-            ["O", "O", "O"],
-            ["X", "X", "O"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.o), "O")
-        board = [
-            ["O", "X", "X"],
-            ["X", "X", "O"],
-            ["O", "O", "O"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.o), "O")
-        # verticals
-        board = [
-            ["O", "X", "O"],
-            ["X", "X", "O"],
-            ["X", "O", "O"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.o), "O")
-        board = [
-            ["O", "O", "X"],
-            ["X", "O", "X"],
-            ["X", "O", "O"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.o), "O")
-        board = [
-            ["O", "O", "X"],
-            ["O", "X", "X"],
-            ["O", "X", "O"],
-        ]
-        self.assertEqual(_check_winning_combinations(board, self.o), "O")
+        for board in boards["winner-o"]:
+            self.assertEqual(_check_winning_combinations(board, self.o), "O")
 
     def test_play_no_winner(self):
         # [
