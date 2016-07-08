@@ -9,8 +9,10 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    pass
-
+    if board[position[0]][position[1]] == "-":
+        return True
+    else:
+        return False
 
 def _position_is_valid(position):
     """
@@ -24,8 +26,16 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    pass
-
+    if isinstance(position,tuple):
+        if len(position) >= 3 or len(position) < 2:
+            return False
+        if position[0] >= 0 and position[0] <= 2 and position[1] >= 0 and position[1] <= 2:
+            return True
+        else:
+            return False
+    else:
+        return False
+        
 
 def _board_is_full(board):
     """
@@ -33,7 +43,11 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    pass
+    for row in board:
+        for spot in row:
+            if spot == '-':
+                return False
+    return True
 
 
 def _is_winning_combination(board, combination, player):
@@ -63,7 +77,18 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    pass
+    combination = (((0,0),(0,1),(0,2)),
+                    ((0,0),(1,0),(2,0)),
+                    ((0,0),(1,1),(2,2)),
+                    ((0,2),(1,1),(2,0)),
+                    ((0,2),(1,2),(2,2)),
+                    ((2,0),(2,1),(2,2)),
+                    ((1,1),(1,2),(1,3)),
+                    ((0,1),(1,1),(2,1)))
+    for bigTup in combination:
+        if board[bigTup[0][0]][bigTup[0][1]] == player and board[bigTup[1][0]][bigTup[1][1]] == player and board[bigTup[2][0]][bigTup[2][1]] == player:
+            return player
+    return None            
 
 
 # public interface
@@ -71,8 +96,18 @@ def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    pass
-
+    conf = {
+        'player1' : player1,
+        'player2' : player2,
+        'board' : [
+                    ["-", "-", "-"],
+                    ["-", "-", "-"],
+                    ["-", "-", "-"],
+                ],
+        'next_turn' : player1,
+        'winner' : None
+    }
+    return conf
 
 def get_winner(game):
     """
@@ -87,18 +122,35 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    pass
+    board = game['board']
+    board[position[0]][position[1]] = player
+        
 
 
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    pass
+    board = '\n'
+    breakCount = 0
+    for row in game['board']:
+        board += printRow(row)
+        if breakCount == 2:
+            break;
+        else:
+            board += printBreak()
+            breakCount += 1
+    return board
+    
+def printRow(row):
+    return row[0] + '  |  ' + row[1] + '  |  ' + row[2] + '\n'
 
+def printBreak():
+    return '--------------\n'
+    
 
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    pass
+    return game['next_turn']
