@@ -1,6 +1,7 @@
 # internal helpers
 #class InvalidMovement(LookupError): "Error"
-from exceptions import *
+from exceptions import InvalidMovement
+from exceptions import GameOver
 
 def _position_is_empty_in_board(position, board):
     """
