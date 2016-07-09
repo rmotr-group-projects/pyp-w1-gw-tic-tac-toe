@@ -39,14 +39,8 @@ def _position_is_valid(position):
 
     if isinstance(position, tuple): 
         if len(position)==2 and position[0] < 3 and position[0] > -1 and position[1] < 3 and position[1] > -1:
-            print(position)
             return True
-        else:
-            print(position)
-            return False
-    else:
-        print(position)
-        return False
+    return False
 
 
 def _board_is_full(board):
@@ -171,9 +165,9 @@ def move(game, player, position):
 
     if _position_is_valid(position) is False:
         raise InvalidMovement('Position out of range.')
-        ##not sure if need below
     if get_next_turn(game) == None:
         raise InvalidMovement('Game is over.')
+        ##not sure if need below
         
     #if _board_is_full(game['board']):
     #    raise GameOver('Game is tied!')
@@ -182,26 +176,26 @@ def move(game, player, position):
     
     #player can make move if pass above
     #is it their turn?
-    if get_next_turn(game) is player: #correct player
+    if get_next_turn(game) is not player:  # not correct player
+        raise InvalidMovement('"{}" moves next'.format(get_next_turn(game)))
         
-        game['board'] [position[0]] [position[1]] = game['next_turn']
-        
-        if game['next_turn'] == game['player1']:
-            print "hello player 1 has finished turn switch to player 2"
-            game['next_turn'] = game['player2']
-        
-        elif game['next_turn'] == game['player2']:
-            print "hello player 2 switch 1"
-            game['next_turn'] = game['player1']
+    game['board'] [position[0]] [position[1]] = game['next_turn']
     
+    if game['next_turn'] == game['player1']:
+        game['next_turn'] = game['player2']
+    
+    elif game['next_turn'] == game['player2']:
+        game['next_turn'] = game['player1']
+
     game['next_turn'] = get_next_turn(game)
     
-    print game['board']
     
     if get_winner(game) != None:
-        raise GameOver('grz ou win')
+        game['next_turn'] = None
+        raise GameOver('"{}" wins!'.format(get_winner(game)) )
     if _board_is_full(game['board']):
         raise GameOver('Game is tied!')
+    
         #raise GameOver('\"{}\" wins!'.format(game['winner']))
     
     
@@ -229,7 +223,6 @@ def get_board_as_string(game):
 
 
 def get_next_turn(game):
-    print "enter get_next_turn"
     if _board_is_full(game['board']):
         return None
     return game['next_turn']    
