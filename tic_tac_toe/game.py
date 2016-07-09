@@ -1,6 +1,6 @@
 # internal helpers
 from .exceptions import (GameOver, InvalidMovement)
-
+#8 hours later
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
