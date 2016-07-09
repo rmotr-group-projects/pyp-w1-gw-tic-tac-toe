@@ -1,6 +1,5 @@
-#from exceptions import *
+from .exceptions import *
 
-# internal helpers
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -28,11 +27,10 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    if len(position) == 2 and position[0] in range(3) and position[1] in range(3):
+    if type(position)==tuple and len(position) == 2 and position[0] in range(3) and position[1] in range(3):
         return True
     else:
-        raise InvalidMovement
-
+        return False
 
 def _board_is_full(board):
     """
@@ -41,6 +39,8 @@ def _board_is_full(board):
     :param board: Game board.
     """
     if '-' in [square for row in board for square in row]:
+        return False
+    else:
         return True
 
 
@@ -96,8 +96,8 @@ def start_new_game(player1, player2):
     game_board = [["-" for row in range(3)] for col in range(3)]
     
     game = {
-        'Player1': player1,
-        'Player2': player2,
+        'player1': player1,
+        'player2': player2,
         'board': game_board,
         'next_turn': player1,
         'winner': None
@@ -117,46 +117,40 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    if _position_is_valid(position) and _position_is_empty_in_board(position, game['board']):
-        game['board'][position[0]][position[1]] = player
-        game['next_turn'] = get_next_turn(game)
-        if _check_winning_combinations(game['board'], player):
-            game['winner'] = player
-            #raise GameOver()
-            
-        elif _board_is_full(game['board']):
-            raise GameOver("Board is full")
-            
-        else:
-            print ('made it')
-            game['next_turn'] = get_next_turn(game)
-    
-    #else: position not valid?
+    if _board_is_full(game['board']):
+        raise InvalidMovement('Game is over.')
+    if not _position_is_valid(position):
+        raise InvalidMovement('Position out of range.')
+    if not _position_is_empty_in_board(position, game['board']):
+        raise InvalidMovement('Position already taken.')
+    if game['winner']:
+        raise InvalidMovement('Game is over')
+    if player != game['next_turn']:
+        raise InvalidMovement('"{}" moves next'.format(game['next_turn']))
+
+    game['board'][position[0]][position[1]] = player
+    game['next_turn'] = 'X' if game['next_turn'] =='O' else 'O'
+    if _check_winning_combinations(game['board'], player):
+        game['winner'] = player
+        raise GameOver('Game Over: "{}" wins!'.format(game['winner']))
+        
+    elif _board_is_full(game['board']):
+        raise GameOver("Game is tied!")
 
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
-    
-    X  |  O  |  X
-    --------------
-    O  |  O  |  X
-    --------------
-    X  |  -  |  -
     """
-    print(game['board'][0][0], ' | ', game['board'][0][1], ' | ', game['board'][0][2])
-    print('--------------')
-    print(game['board'][1][0], ' | ', game['board'][1][1], ' | ', game['board'][1][2])
-    print('--------------')
-    print(game['board'][2][0], ' | ', game['board'][2][1], ' | ', game['board'][2][2])
-
+    line1 = game['board'][0][0] + '  |  ' + game['board'][0][1] + '  |  ' + game['board'][0][2] 
+    line2 = game['board'][1][0] + '  |  ' + game['board'][1][1] + '  |  ' + game['board'][1][2]
+    line3 = game['board'][2][0] + '  |  ' + game['board'][2][1] + '  |  ' + game['board'][2][2] 
+    separator = "--------------"
+    return "\n{}\n{}\n{}\n{}\n{}\n".format(line1, separator, line2, separator, line3)
+    
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    #if game over:
-    return 'X' if game['next_turn'] == 'O' else 'O' 
-    # else: return None
-    
-#g = (start_new_game('x', 'o'))
-#move(g, 'X', (0,0))
-#get_board_as_string(g)
+    return game['next_turn']
+
+
