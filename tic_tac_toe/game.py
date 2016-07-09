@@ -1,3 +1,5 @@
+from exceptions import InvalidMovement
+
 # internal helpers
 def _position_is_empty_in_board(position, board):
     """
@@ -61,7 +63,10 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    pass
+    if board[combination[0][0]][combination[0][1]] == player and board[combination[1][0]][combination[1][1]] == player and board[combination[2][0]][combination[2][1]] == player:
+        return True
+    else:
+        return False
 
 
 def _check_winning_combinations(board, player):
@@ -83,11 +88,14 @@ def _check_winning_combinations(board, player):
                     ((0,2),(1,1),(2,0)),
                     ((0,2),(1,2),(2,2)),
                     ((2,0),(2,1),(2,2)),
-                    ((1,1),(1,2),(1,3)),
+                    ((1,0),(1,1),(1,2)),
                     ((0,1),(1,1),(2,1)))
-    for bigTup in combination:
-        if board[bigTup[0][0]][bigTup[0][1]] == player and board[bigTup[1][0]][bigTup[1][1]] == player and board[bigTup[2][0]][bigTup[2][1]] == player:
+    for singleCombo in combination:
+        if _is_winning_combination(board,singleCombo,player) == True:
             return player
+    # for bigTup in combination:
+    #     if board[bigTup[0][0]][bigTup[0][1]] == player and board[bigTup[1][0]][bigTup[1][1]] == player and board[bigTup[2][0]][bigTup[2][1]] == player:
+    #         return player
     return None            
 
 
@@ -122,8 +130,11 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    board = game['board']
-    board[position[0]][position[1]] = player
+    if _position_is_valid(position) == False:
+        raise InvalidMovement()
+    else:
+        board = game['board']
+        board[position[0]][position[1]] = player
         
 
 
@@ -153,4 +164,7 @@ def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    return game['next_turn']
+    if game['next_turn'] == 'X':
+        return 'O'
+    else:
+        return 'X'

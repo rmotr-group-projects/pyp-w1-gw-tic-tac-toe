@@ -1,5 +1,6 @@
 class InvalidMovement(Exception):
-    pass
+    def __init__(self,*args,**kwargs):
+        Exception.__init__(self,*args,**kwargs)
 
 class GameOver(Exception):
     pass

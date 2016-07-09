@@ -263,7 +263,7 @@ class TestTicTacToe(unittest.TestCase):
         self.game['board'] = [
             ["O", "O", "X"],
             ["O", "X", "X"],
-            ["O", "X", "O"],
+            ["O", "X", "O"]
         ]
         expected = """
 O  |  O  |  X
