@@ -14,7 +14,6 @@ def _position_is_empty_in_board(position, board):
     return board[x][y] == '-'
 
 
-
 def _position_is_valid(position):
     """
     Checks if given position is a valid. To consider a position as valid, it
@@ -44,7 +43,6 @@ def _board_is_full(board):
     :param board: Game board.
     """
     return '-' not in [y for x in board for y in x]
-            
 
 
 def _is_winning_combination(board, combination, player):
@@ -90,7 +88,6 @@ def _check_winning_combinations(board, player):
         return player
     else:
         return None
-        
 
 
 # public interface
@@ -105,21 +102,12 @@ def start_new_game(player1, player2):
     ]
     
     return {'player1': player1, 'player2': player2, 'board': board, 'next_turn': player1, 'winner': None}
-    
-    
-    
 
 def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
     """
     return game.get("winner", None)
-    
-    # if _check_winning_combinations(game['board'], game['player1']) == None:
-    #     return _check_winning_combinations(game['board'], game['player2'])
-    # else:
-    #     return _check_winning_combinations(game['board'], game['player1'])
-
 
 def move(game, player, position):
     """
@@ -176,3 +164,4 @@ def get_next_turn(game):
     Returns the player who plays next, or None if the game is already over.
     """
     return game['next_turn']
+    
