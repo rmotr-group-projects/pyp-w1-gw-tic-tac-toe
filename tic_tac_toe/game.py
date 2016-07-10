@@ -1,7 +1,7 @@
 # internal helpers
-#test3
+
 from .exceptions import (GameOver, InvalidMovement)
-#8 hours later
+
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -12,17 +12,14 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    #placement = list(position)
-    position_1 = position[0]
-    position_2 = position[1]
-    if board[position_1][position_2] == "-":
+    
+    if board[position[0]][position[1]] == "-":
         return True
     else:
-        print(board[position_1][position_2])
         return False
-    # valid_positions = [(0,0), (1,1), (2,2), 
-    #                   (0,0), (1,1), (2,2),
-    #                   (0,0), (1,1), (2,2),]
+        # valid_positions = [(0,0), (1,1), (2,2), 
+        #                   (0,0), (1,1), (2,2),
+        #                   (0,0), (1,1), (2,2),]
 
 def _position_is_valid(position):
     """
@@ -50,7 +47,6 @@ def _board_is_full(board):
     :param board: Game board.
     """
     for row in board:
-        
         if "-" in row:
             return False
     
@@ -167,6 +163,8 @@ def move(game, player, position):
         raise InvalidMovement('Position out of range.')
     if get_next_turn(game) == None:
         raise InvalidMovement('Game is over.')
+    if _position_is_empty_in_board(position, game['board']) is False:
+        raise InvalidMovement('Position already taken.')
         ##not sure if need below
         
     #if _board_is_full(game['board']):
@@ -208,15 +206,27 @@ def move(game, player, position):
 
 
 def get_board_as_string(game):
-    print("""
-{0}  |  {1}  |  {2}
+# expected = """
+# O  |  O  |  X
+# --------------
+# O  |  X  |  X
+# --------------
+# O  |  X  |  O
+# """
+    
+    string =  ("""
+{}  |  {}  |  {}
 --------------
-{3}  |  {4}  |  {5}
+{}  |  {}  |  {}
 --------------
-{6}  |  {7}  |  {8} """.format(
+{}  |  {}  |  {}
+""".format(
                         game['board'][0][0],game['board'][0][1],game['board'][0][2],
                         game['board'][1][0],game['board'][1][1],game['board'][1][2],
                         game['board'][2][0],game['board'][2][1],game['board'][2][2]))    
+    print string
+    return string
+    
     #Returns a string representation of the game board in the current state.
     
 
