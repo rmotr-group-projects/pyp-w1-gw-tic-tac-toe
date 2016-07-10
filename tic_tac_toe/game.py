@@ -64,7 +64,8 @@ def _is_winning_combination(board, combination, player):
     """
     for boardEntry in combination:
         posX, posY = boardEntry
-        if board[posX][posY] != player: return False
+        if board[posX][posY] != player: 
+            return False
     return True
     
 
@@ -95,13 +96,10 @@ def _check_winning_combinations(board, player):
                     ((1, 0), (1, 1), (1, 2)),
                     ((2, 0), (2, 1), (2, 2))
            ]
-
-    for diagonal in diagonals:
-        if _is_winning_combination(board, diagonal, player): return player
-    for column in columns:
-        if _is_winning_combination(board, column, player): return player
-    for row in rows:
-        if _is_winning_combination(board, row, player): return player
+           
+    for combination in diagonals+columns+rows:
+        if _is_winning_combination(board, combination, player): 
+            return player
     return None
 
 
