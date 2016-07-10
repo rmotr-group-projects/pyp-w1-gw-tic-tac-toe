@@ -33,11 +33,13 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-
-    if isinstance(position, tuple): 
-        if len(position)==2 and position[0] < 3 and position[0] > -1 and position[1] < 3 and position[1] > -1:
-            return True
-    return False
+    try:
+        if len(position) != 2: return False
+        if max(position) >  2: return False
+        if min(position) <  0: return False
+    except:
+        return False
+    return True
 
 
 def _board_is_full(board):
@@ -110,8 +112,7 @@ def _check_winning_combinations(board, player):
     for winner in win_combination_list:
         if _is_winning_combination(board, winner, player) == True:
             return player
-    else:
-        return None
+    return None
     
 
 # public interface
