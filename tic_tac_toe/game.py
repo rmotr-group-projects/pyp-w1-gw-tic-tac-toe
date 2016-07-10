@@ -109,8 +109,6 @@ def _check_winning_combinations(board, player):
                             )
     for winner in win_combination_list:
         if _is_winning_combination(board, winner, player) == True:
-            print winner
-            print player
             return player
     else:
         return None
@@ -128,7 +126,6 @@ def start_new_game(player1, player2):
         ]
     new_game['next_turn'] = player1
     new_game['winner'] = None
-    print "new game"
     return new_game
 
     
