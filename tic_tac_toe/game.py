@@ -45,10 +45,11 @@ def _board_is_full(board):
     Returns True if all positions in given board are occupied.
     :param board: Game board.
     """
-    if (reduce(lambda x,y: x+y,board)).count("-") == 0:
-        return True
-    else:
-        return False
+    for row in board:
+        for spot in row:
+            if spot == '-':
+                return False
+    return True
 
 def _is_winning_combination(board, combination, player):
     """
