@@ -1,6 +1,7 @@
 # internal helpers
 import random
-from exceptions import InvalidMovement, GameOver
+from tic_tac_toe.exceptions import GameOver
+from tic_tac_toe.exceptions import InvalidMovement
 
 def _position_is_empty_in_board(position, board):
     """
@@ -12,8 +13,10 @@ def _position_is_empty_in_board(position, board):
     Returns True if given position is empty, False otherwise.
     """
     #checks if each position in the board is "-", denoting if its empty
-    if _position_is_valid(position):
-        return board[position[0]][position[1]] == "-"
+    if board[position[0]][position[1]] == "-":
+        return True
+    else:
+        return False
 
 def _position_is_valid(position):
     """
@@ -154,30 +157,21 @@ def move(game, player, position=None):
     if get_winner(game) != None or _board_is_full(game['board']) == True:
         raise InvalidMovement('Game is over.')
         
-    if player != game['next_turn']:
+    elif player != game['next_turn']:
         if game['next_turn'] == game['player1']:
             raise InvalidMovement('"X" moves next')
         else:
             raise InvalidMovement('"O" moves next')
         
-    if _position_is_valid(position) == False:
+    elif _position_is_valid(position) == False:
         raise InvalidMovement("Position out of range.")
     
-    if position == None:
-        row = int(input("Please enter the row you would like to play"))
-        if 0 >= row >=3:
-            row = int(input("Invalid row; please enter new row"))
-        column = int(input("Please enter the column you would like to play"))
-        if 0 >= column >= 3:
-            column = int(input("invalid column, please enter a new column"))
-    else: 
-        row = position[0]
-        column = position[1]
-    
-    if game["board"][row][column] != "-":
+    elif _position_is_empty_in_board(position, game['board']) == False:
         raise InvalidMovement("Position already taken.")
-        
-    game['board'][row][column] = player
+    
+    else:
+        board = game['board']
+        board[position[0]][position[1]] = player
 
     game['winner'] = _check_winning_combinations(game["board"], player)
     
