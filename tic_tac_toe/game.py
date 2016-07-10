@@ -9,7 +9,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    if board[position[0]][position[1]] == "-":
+    if board[position[0][position[1]]] == "-":
         return True
     else:
         return False
@@ -63,7 +63,7 @@ def _is_winning_combination(board, combination, player):
     player, False otherwise.
     """
     for c in combination:
-        if board[c[0]c[1]] != player:
+        if board[c[0:1]] != player:
             return False
     return True
 
@@ -83,7 +83,7 @@ def _check_winning_combinations(board, player):
     """
     
     combinations = (
-        ((0,0), (0,1), (0,2))
+        ((0,0), (0,1), (0,2)),
         ((1,0), (1,1), (1,2)),
         ((2,0), (2,1), (2,2)),
         
@@ -139,16 +139,14 @@ def move(game, player, position):
         raise InvalidMovement("Position already taken.")
     if not _position_is_valid(position):
         raise InvalidMovement("Position out of range.")
+        
     #check turn
-    if player == get_next_turn(game)
+    if player == get_next_turn(game):
         raise InvalidTurn("It's not your turn!")
+        
     #update board
     game['board'][position[0]][position[1]] = player
-'''    
-                ["-", "-", "-"],
-                ["-", "-", "-"],
-                ["-", "-", "-"],
-'''
+    
     #update next_turn
     if player == game['player1']:
         game['next_turn'] = game['player2']
@@ -166,11 +164,11 @@ def get_board_as_string(game):
     print_str = ""
     for row in board:
     	for col in row:
-    		if row.index(col) != 2:
+            if row.index(col) <= 1:
     			print_str += col + "  |  "
     			#print(row.index(col))
-    		else:
-    			print_str += col
+            else:
+                print_str += col
     	if board.index(row) != 2:
     		print_str += "\n--------------\n"
     #print(board)
