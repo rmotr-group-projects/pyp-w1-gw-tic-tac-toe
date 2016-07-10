@@ -170,9 +170,10 @@ def move(game, player, position):
         if playerWon:
             game["winner"] = player
             raise GameOver("\"{}\" wins!".format(player))
-        if _board_is_full(board): raise GameOver("Game is tied!")
-        
+        if _board_is_full(board): 
+            raise GameOver("Game is tied!")
         _swapTurn(game, player, playerOne, playerTwo)
+
 
 def get_board_as_string(game):
     """
