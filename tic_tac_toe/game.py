@@ -63,11 +63,7 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-     # Diagonals
-    #tuple looks like: ((0,0), (0,1), (0,2))
-    #the tuple used as a position will look like: [combination(0)(0)][combination(0)(1)]
-    #board position looks like board[0]board[1]
-    #win_combination_list = [[hwin1], [hwin2], [hwin3], [vwin1], [vwin2], [vwin3], [dwin1], [dwin2]]
+   
     win_combination_list = [ 
         ((0,0), (1,1), (2,2)), #diagonal win left to right
         ((0,2), (1,1), (2,0)), #diagonal win right to left
@@ -86,12 +82,6 @@ def _is_winning_combination(board, combination, player):
         board [combination[2][0]] [combination[2][1]] == player:
             return (True)
     return False
-        
-    # if _check_winning_combinations(board, player) != None:
-    #     return True
-    # return False
-    
-
 
 def _check_winning_combinations(board, player):
     """
@@ -161,19 +151,13 @@ def move(game, player, position):
 
     if _position_is_valid(position) is False:
         raise InvalidMovement('Position out of range.')
+        
     if get_next_turn(game) == None:
         raise InvalidMovement('Game is over.')
+        
     if _position_is_empty_in_board(position, game['board']) is False:
         raise InvalidMovement('Position already taken.')
-        ##not sure if need below
         
-    #if _board_is_full(game['board']):
-    #    raise GameOver('Game is tied!')
-    #if player != get_next_turn:
-    #    raise InvalidMovement('not your turn!')
-    
-    #player can make move if pass above
-    #is it their turn?
     if get_next_turn(game) is not player:  # not correct player
         raise InvalidMovement('"{}" moves next'.format(get_next_turn(game)))
         
@@ -187,16 +171,12 @@ def move(game, player, position):
 
     game['next_turn'] = get_next_turn(game)
     
-    
     if get_winner(game) != None:
         game['next_turn'] = None
         raise GameOver('"{}" wins!'.format(get_winner(game)) )
+        
     if _board_is_full(game['board']):
         raise GameOver('Game is tied!')
-    
-        #raise GameOver('\"{}\" wins!'.format(game['winner']))
-    
-    
         
     """
     Performs a player movement in the game. Must ensure all the pre requisites
@@ -204,17 +184,9 @@ def move(game, player, position):
     After registering the movement it must check if the game is over.
     """
 
-
 def get_board_as_string(game):
-# expected = """
-# O  |  O  |  X
-# --------------
-# O  |  X  |  X
-# --------------
-# O  |  X  |  O
-# """
-    
-    string =  ("""
+
+    return ("""
 {}  |  {}  |  {}
 --------------
 {}  |  {}  |  {}
@@ -223,9 +195,7 @@ def get_board_as_string(game):
 """.format(
                         game['board'][0][0],game['board'][0][1],game['board'][0][2],
                         game['board'][1][0],game['board'][1][1],game['board'][1][2],
-                        game['board'][2][0],game['board'][2][1],game['board'][2][2]))    
-    print string
-    return string
+                        game['board'][2][0],game['board'][2][1],game['board'][2][2]))
     
     #Returns a string representation of the game board in the current state.
     
