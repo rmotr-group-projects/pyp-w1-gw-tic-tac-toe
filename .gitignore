@@ -60,3 +60,11 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+
+#virtualenv
+tic-tac-toe-env/
+
+#cloud9
+*.c9
+.c9/
