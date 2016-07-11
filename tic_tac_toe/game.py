@@ -138,7 +138,7 @@ def move(game, player, position):
     
     game['board'][position[0]][position[1]] = player
     winner = _check_winning_combinations(game['board'], player)
-    game['winner] = winner
+    game['winner'] = winner
     if winner:
         raise GameOver ('"{}" wins!'.format(winner))
     
