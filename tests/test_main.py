@@ -273,7 +273,6 @@ O  |  X  |  X
 O  |  X  |  O
 """
         self.assertEqual(get_board_as_string(self.game), expected)
-        print(expected)
         
     def test_get_next_turn(self):
         self.assertEqual(get_next_turn(self.game), self.x)
