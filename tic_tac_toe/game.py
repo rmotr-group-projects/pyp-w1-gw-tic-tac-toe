@@ -5,7 +5,7 @@ from tic_tac_toe.exceptions import InvalidMovement, GameOver
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
-mk
+
     :param position: Two-elements tuple representing a
                      position in the board. Example: (0, 1)
     :param board: Game board.
@@ -29,7 +29,6 @@ def _position_is_valid(position):
     """
     return (type(position) is tuple and len(position) == 2 and 
             0 <= position[0] <= 2 and 0 <= position[1] <= 2)
-
 
 
 def _board_is_full(board):
@@ -101,7 +100,6 @@ def start_new_game(player1, player2):
     }
 
 
-
 def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
@@ -135,7 +133,6 @@ def move(game, player, position):
     elif _board_is_full(board):
         raise GameOver('Game is tied!')
     switch_turn(game)
-    
     
 
 def get_board_as_string(game):
