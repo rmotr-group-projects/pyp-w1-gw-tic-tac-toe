@@ -30,11 +30,11 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    if (type(position) is not tuple or len(position) != 2 or 
-        not 0 <= position[0] <= 2 or not 0 <= position[1] <= 2):
-        return False
-    else:
+    if (type(position) is tuple and len(position) == 2 and 
+        0 <= position[0] <= 2 and 0 <= position[1] <= 2):
         return True
+    else:
+        return False
 
 
 def _board_is_full(board):
