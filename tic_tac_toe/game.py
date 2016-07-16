@@ -97,8 +97,6 @@ def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    # p1 = input("player1 = ")
-    # p2 = input("player2 = ")
     game_configuration = {
         'player1' : player1,
         'player2' : player2,
@@ -137,8 +135,10 @@ def move(game, player, position):
         raise InvalidMovement('Position out of range.')
     if not _position_is_empty_in_board(position, board):
         raise InvalidMovement('Position already taken.')
+        
     board[position[0]][position[1]] = current_player
     game['winner'] = _check_winning_combinations(board, player)
+    
     if game['winner']:
         raise GameOver('"' + current_player + '" wins!')
     elif _board_is_full(board):
