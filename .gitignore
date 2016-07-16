@@ -61,4 +61,4 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 
-.~c9*
+*.~c9*
