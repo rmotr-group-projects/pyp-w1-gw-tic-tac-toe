@@ -12,10 +12,7 @@ mk
 
     Returns True if given position is empty, False otherwise.
     """
-    if (board[position[0]][position[1]] == '-'):
-        return True
-    else:
-        return False
+    return (board[position[0]][position[1]] == '-')
 
 
 def _position_is_valid(position):
@@ -30,11 +27,9 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    if (type(position) is tuple and len(position) == 2 and 
-        0 <= position[0] <= 2 and 0 <= position[1] <= 2):
-        return True
-    else:
-        return False
+    return (type(position) is tuple and len(position) == 2 and 
+            0 <= position[0] <= 2 and 0 <= position[1] <= 2)
+
 
 
 def _board_is_full(board):
@@ -61,11 +56,7 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    if False in [board[i][j] == player for i,j in combination]:
-        return False
-    else:
-        return True
-        
+    return not False in [board[i][j] == player for i,j in combination]
 
 
 def _check_winning_combinations(board, player):
@@ -97,7 +88,7 @@ def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    game_configuration = {
+    return {
         'player1' : player1,
         'player2' : player2,
         'board' : [
@@ -108,7 +99,7 @@ def start_new_game(player1, player2):
         'next_turn' : player1,
         'winner' : None
     }
-    return game_configuration
+
 
 
 def get_winner(game):
