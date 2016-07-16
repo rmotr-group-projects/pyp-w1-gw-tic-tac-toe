@@ -65,7 +65,7 @@ def _is_winning_combination(board, combination, player):
             if _position_is_valid((x,y)):
         	    if board[x][y] != player:
         	        return False
-    	else:
+        else:
     	    return True
 
 
