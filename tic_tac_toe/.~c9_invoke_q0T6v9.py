@@ -27,7 +27,7 @@ def _position_is_valid(position): #Sam Foo
                      position in the board. Example: (0, 1)
 
     Returns True if given position is valid, False otherwise.
-    """
+def _board_is_full(board): #Kenneth
     if len(position) > 2:
         return False
     for dimension in position:
@@ -76,7 +76,7 @@ def _check_winning_combinations(board, player): #Sam Foo
     
     for i in range(2):
         for line in board:#range(len(board)):
-            if "-" in board[line]:
+            #if "-" in board[line]:
                 return None
             if line == [player] * 3:
                 return player

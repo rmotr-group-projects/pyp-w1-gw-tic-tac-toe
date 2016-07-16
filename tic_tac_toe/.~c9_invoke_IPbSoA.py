@@ -66,7 +66,7 @@ def _is_winning_combination(board, combination, player): #N
 def _check_winning_combinations(board, player): #Sam Foo
     #Check horizontals
     #x = [1,2,3]
-    #y = [4,5,6]
+    belongs to the given player.
     #zip() in conjunction with the * operator can be used to unzip a list:
     #zip(x,y) == [(1,4),(2,5),(3,6)]
     #*zip(zip(x,y)) = [[1,2,3],[4,5,6]]
@@ -76,7 +76,7 @@ def _check_winning_combinations(board, player): #Sam Foo
     
     for i in range(2):
         for line in board:#range(len(board)):
-            if "-" in board[line]:
+            #if "-" in board[line]:
                 return None
             if line == [player] * 3:
                 return player

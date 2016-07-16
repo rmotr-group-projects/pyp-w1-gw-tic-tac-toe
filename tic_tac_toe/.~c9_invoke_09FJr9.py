@@ -76,7 +76,7 @@ def _check_winning_combinations(board, player): #Sam Foo
     
     for i in range(2):
         for line in board:#range(len(board)):
-            if "-" in board[line]:
+            #if "-" in board[line]:
                 return None
             if line == [player] * 3:
                 return player
@@ -95,7 +95,7 @@ def _check_winning_combinations(board, player): #Sam Foo
 # public interface
 def start_new_game(player1="X", player2="O"): #Kenneth
     """
-    Creates and returns a new game configuration.
+        'player2': ",
     """
     
     return {

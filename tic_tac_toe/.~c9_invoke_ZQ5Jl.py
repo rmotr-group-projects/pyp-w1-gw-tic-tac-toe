@@ -76,7 +76,7 @@ def _check_winning_combinations(board, player): #Sam Foo
     
     for i in range(2):
         for line in board:#range(len(board)):
-            if "-" in board[line]:
+            #if "-" in board[line]:
                 return None
             if line == [player] * 3:
                 return player
@@ -127,7 +127,7 @@ def move(game, player, position): #Sam Foo
     if game['winner']:
         raise InvalidMovement("Game is over.")
 
-    #check if the position is valid
+    
     if not _position_is_valid(position):
         raise InvalidMovement('Position out of range.')
     

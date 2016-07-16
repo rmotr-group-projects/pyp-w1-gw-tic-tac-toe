@@ -76,7 +76,7 @@ def _check_winning_combinations(board, player): #Sam Foo
     
     for i in range(2):
         for line in board:#range(len(board)):
-            if "-" in board[line]:
+            #if "-" in board[line]:
                 return None
             if line == [player] * 3:
                 return player
@@ -148,7 +148,7 @@ def move(game, player, position): #Sam Foo
     #determines and updates the winner
     
 
-pass
+    #
 
 
 def get_board_as_string(game): #Nicolas

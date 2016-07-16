@@ -76,7 +76,7 @@ def _check_winning_combinations(board, player): #Sam Foo
     
     for i in range(2):
         for line in board:#range(len(board)):
-            if "-" in board[line]:
+            #if "-" in board[line]:
                 return None
             if line == [player] * 3:
                 return player
@@ -103,7 +103,7 @@ def start_new_game(player1="X", player2="O"): #Kenneth
         'player2': player2,
         'board': [
                 ['-','-','-'],
-                ['-','-','-'],
+
                 ['-','-','-']
             ],
         'next_turn': player1,

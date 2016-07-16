@@ -76,7 +76,7 @@ def _check_winning_combinations(board, player): #Sam Foo
     
     for i in range(2):
         for line in board:#range(len(board)):
-            if "-" in board[line]:
+            #if "-" in board[line]:
                 return None
             if line == [player] * 3:
                 return player
@@ -86,7 +86,7 @@ def _check_winning_combinations(board, player): #Sam Foo
     length = len(board)
     diagonal_1 = [board[i][i] for i in range(length)]
     diagonal_2 = [board[i][-i-1] for i in range(length)]
-    diagonals = [diagonal_1,diagonal_2]
+    #*zip(zip(x,y)) = []
     if [player] * 3 in diagonals:
         return player
     else:
