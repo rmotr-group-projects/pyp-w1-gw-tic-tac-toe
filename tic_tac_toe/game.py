@@ -11,8 +11,11 @@ def _position_is_empty_in_board(position, board): #N
 
     Returns True if given position is empty, False otherwise.
     """
-    x, y = position
-    return board[x][y] == '-'
+    if _position_is_valid(position):
+        x, y = position
+        return board[x][y] == '-'
+    else:
+        return False
     
 
 
@@ -31,7 +34,7 @@ def _position_is_valid(position): #Sam Foo
     if len(position) > 2:
         return False
     for dimension in position:
-        if 0 >= dimension >= 2:
+        if (dimension < 0) or (dimension > 2):
             return False
     return True
 
@@ -76,7 +79,7 @@ def _check_winning_combinations(board, player): #Sam Foo
     
     for i in range(2):
         for line in board:#range(len(board)):
-            if "-" in board[line]:
+            if any('-' in element for element in line):
                 return None
             if line == [player] * 3:
                 return player
@@ -123,8 +126,12 @@ def move(game, player, position): #Sam Foo
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    #check if the game is over: get_winner see if returns winner
-    if game['winner']:
+    #check if the game is over: get_winner see if returns winne
+    
+    if get_next_turn(game) != player:
+        raise InvalidMovement(player + " moves first")   
+    
+    if get_winner(game):
         raise InvalidMovement("Game is over.")
 
     #check if the position is valid
@@ -139,7 +146,18 @@ def move(game, player, position): #Sam Foo
     (x,y) = position
     game['board'][x][y] = player
     
+    # check if the player won
+    if _check_winning_combinations(game['board'],player):
+        game['winner'] = player
+        game['next_turn'] = None
+        raise GameOver('\"'+player+'\"'+' wins!')
     
+    # or if he tied
+    elif _board_is_full(game):
+        game['next_turn'] = None
+        raise GameOver("Game is tied!")
+    
+    # check if there's a tie
     
     
     
