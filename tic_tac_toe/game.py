@@ -27,7 +27,7 @@ def _position_is_valid(position):
     Returns True if given position is valid, False otherwise.
     """
     #--- creates a list of all possible valid positions and checks against that.
-    valid_positions = [(x, y) for x in xrange(3) for y in xrange(3)]
+    valid_positions = [(x, y) for x in range(3) for y in range(3)]
     return position in valid_positions
 
 
