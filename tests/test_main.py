@@ -223,7 +223,7 @@ class TestTicTacToe(unittest.TestCase):
         with self.assertRaisesRegexp(GameOver, '"X" wins!'):
             move(self.game, self.x, position=(0, 2))
         self.assertEqual(get_winner(self.game), self.x)
-        with self.assertRaisesRegexp(InvalidMovement, 'Game is over'):
+        with self.assertRaisesRegexp(InvalidMovement, 'Game is over.'):
             move(self.game, self.o, position=(2, 2))
 
     def test_play_O_wins(self):
@@ -240,7 +240,7 @@ class TestTicTacToe(unittest.TestCase):
         with self.assertRaisesRegexp(GameOver, '"O" wins!'):
             move(self.game, self.o, position=(2, 2))
         self.assertEqual(get_winner(self.game), self.o)
-        with self.assertRaisesRegexp(InvalidMovement, 'Game is over'):
+        with self.assertRaisesRegexp(InvalidMovement, 'Game is over.'):
             move(self.game, self.x, position=(2, 0))
 
     def test_play_one_player_moves_twice(self):
