@@ -1,6 +1,8 @@
 class InvalidMovement(Exception):
-    pass
+	def __init__(self, message):
+		super(InvalidMovement, self).__init__(message)
 
 
 class GameOver(Exception):
-    pass
+    def __init__(self, message):
+    	super(GameOver, self).__init__(message)
