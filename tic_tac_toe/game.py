@@ -136,7 +136,7 @@ def start_new_game(player1, player2):
     game["player1"] = "X"
     game["player2"] = "O"
     empty_board_row = ["-", "-", "-"]
-    empty_board = [empty_board_row.copy(), empty_board_row.copy(), empty_board_row.copy()]
+    empty_board = [empty_board_row[:], empty_board_row[:], empty_board_row[:]]
     game["board"] = empty_board
     game["next_turn"] = "X"
     game["winner"]= None
