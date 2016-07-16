@@ -9,7 +9,13 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    pass
+    if _position_is_valid(position):
+        if board[position[0]][position[1]] == '-':
+            return True
+        else:
+            return False
+    except AssertionError:
+        
 
 
 def _position_is_valid(position):
@@ -24,7 +30,11 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    pass
+    valid_positions = [(x, y) for x in xrange(3) for y in xrange(3)]
+    if position in valid_positions:
+        return True
+    else:
+        return False
 
 
 def _board_is_full(board):
@@ -71,14 +81,25 @@ def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    pass
-
+    
+    return {
+    'player1': player1,
+    'player2': player2,
+    'board': [
+        ["-", "-", "-"],
+        ["-", "-", "-"],
+        ["-", "-", "-"],
+    ],
+    'next_turn': player1,
+    'winner': None
+    }
 
 def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
     """
-    pass
+    
+    
 
 
 def move(game, player, position):
