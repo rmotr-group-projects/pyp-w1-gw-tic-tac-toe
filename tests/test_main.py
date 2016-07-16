@@ -266,12 +266,12 @@ class TestTicTacToe(unittest.TestCase):
             ["O", "X", "O"],
         ]
         expected = """
-O  |  O  |  X
---------------
-O  |  X  |  X
---------------
-O  |  X  |  O
-"""
+        O  |  O  |  X
+        --------------
+        O  |  X  |  X
+        --------------
+        O  |  X  |  O
+        """
         self.assertEqual(get_board_as_string(self.game), expected)
 
     def test_get_next_turn(self):
