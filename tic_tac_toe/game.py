@@ -1,11 +1,11 @@
-from exceptions import InvalidMovement, GameOver
+from tic_tac_toe.exceptions import InvalidMovement, GameOver
 
 
 # internal helpers
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
-
+mk
     :param position: Two-elements tuple representing a
                      position in the board. Example: (0, 1)
     :param board: Game board.
