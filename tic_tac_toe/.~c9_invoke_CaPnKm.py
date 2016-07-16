@@ -1,5 +1,3 @@
-from .exceptions import *
-
 # internal helpers
 def _position_is_empty_in_board(position, board):
     """
@@ -34,7 +32,7 @@ def _position_is_valid(position):
         return True
     else:
         return False
-    
+        return False
 
 def _board_is_full(board):
     """
@@ -98,6 +96,8 @@ def _check_winning_combinations(board, player):
     return None
 
 # public interface
+player1 = "X"
+player2 = "O"
 def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
@@ -130,46 +130,24 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    
-    # Checks to see if a move is even allowed   
-    if _board_is_full(game['board']) or get_winner(game) != None:
-        game['next_turn'] = None
-        raise InvalidMovement("Game is over.")
-    if player != game['next_turn']:
-        raise InvalidMovement('"' + game['next_turn'] + '"' + ' moves next')
-    if not _position_is_valid(position):
-        raise InvalidMovement("Position out of range.")
-    if not _position_is_empty_in_board(position, game["board"]):
-        raise InvalidMovement("Position already taken.")
-
-    # If no errors are raised, a move is possible       
-    game['board'][position[0]][position[1]] = player
-    
-    # Check to see if this move leads to a winner
-    if _check_winning_combinations(game['board'],player):
-        game['winner'] = player
-        game['next_turn'] = None
-        raise GameOver('"' + player + '"' + ' wins!')
-    # If no winner, check to see if game is tied
-    if _board_is_full(game['board']):
-        game['winner'] = None
-        game['next_turn'] = None
-        raise GameOver("Game is tied!")
-
-    # Changes the 'next_turn' key's value in the dictionary to show who's next
-    if game['next_turn'] == 'X':
-        game['next_turn'] = 'O'
+    if not _board_is_full(game['board']) and _position_is_valid(position) and _position_is_empty_in_board(position,game['board']):
+        game['board'][position[0]][position[1]] = player
+        # Check to see if player won or if game is over \/ down here
+        if _check_winning_combinations(game['board'],player):
+            pass
+            game['winner'] = player
+            # set player as winner
+            #raise gameover excpetion
     else:
-        game['next_turn'] = 'X'
-        
+        pass
+        ## raise exceptions
+
+
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    board_as_string = game['board'][0][0] + '  |  ' + game['board'][0][1] + '  |  ' + game['board'][0][2] + '\n--------------\n' + game['board'][1][0] + '  |  ' + game['board'][1][1] + '  |  ' + game['board'][1][2] + '\n--------------\n' + game['board'][2][0] + '  |  ' + game['board'][2][1] + '  |  ' + game['board'][2][2] + '\n'
-    print(board_as_string)
-    #return board_as_string
-    return '\n' + board_as_string
+    return str('\n' + game['board'][0][0] + '  |  ' + game['board'][0][1] + '  |  ' + game['board'][0][2] + '\n--------------\n' + game['board'][1][0] + '  |  ' + game['board'][1][1] + '  |  ' + game['board'][1][2] + '\n--------------\n' + game['board'][2][0] + '  |  ' + game['board'][2][1] + '  |  ' + game['board'][2][2] + '\n')
         
 
 
@@ -177,4 +155,7 @@ def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    return game['next_turn']
+    if get_winner(game) == None and not _board_is_full(game['board']):
+        return game['next_turn'] # need to see test_main.py to see what to return otherwise we can use this text: "Next person to plays is " + " " + 
+    else:
+        return None
