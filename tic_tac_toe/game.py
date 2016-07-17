@@ -16,9 +16,6 @@ def _position_is_empty_in_board(position, board):
     indexInRow = position[1]
     
     return (board[row][indexInRow] == '-')
-        #return True
-    #else:
-        #return False
     
     pass
 
@@ -42,9 +39,6 @@ def _position_is_valid(position):
         ]
         
     return (position in valid_positions)
-        #return True
-   
-    #return False
     
     pass
 
@@ -55,12 +49,7 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    
     return not True in ['-' in row for row in board]
-    #for row in board:
-        #if '-' in row: 
-            #return False
-    #return True
             
     pass
 
@@ -76,9 +65,7 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    
-    #((0,0), (0,1), (0,2))
-    #isWinningCombo = True
+
     for position in combination:
         positionRow, positionColumn = position
         if board[positionRow][positionColumn] != player:
@@ -118,7 +105,6 @@ def _check_winning_combinations(board, player):
             return player
             
     pass
-
 
 # public interface
 def start_new_game(player1, player2):
