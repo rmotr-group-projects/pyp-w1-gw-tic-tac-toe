@@ -9,34 +9,6 @@ rootdir: /home/ubuntu/workspace, inifile:
 plugins: cov-2.2.1
 collected 17 items
 
-tests/test_main.py ...............F.
+tests/test_main.py .................
 
-=================================== FAILURES ===================================
-________________________ TestTicTacToe.test_print_board ________________________
-
-self = <tests.test_main.TestTicTacToe testMethod=test_print_board>
-
-    def test_print_board(self):
-        self.game['board'] = [
-            ["O", "O", "X"],
-            ["O", "X", "X"],
-            ["O", "X", "O"],
-        ]
-        expected = """
-    O  |  O  |  X
-    --------------
-    O  |  X  |  X
-    --------------
-    O  |  X  |  O
-    """
->       self.assertEqual(get_board_as_string(self.game), expected)
-E       AssertionError: '\nO  |  O  |  X\n' != '\nO  |  O  |  X\n--------------\nO  |  X  |  X\n----------[17 chars] O\n'
-E         
-E         O  |  O  |  X
-E       + --------------
-E       + O  |  X  |  X
-E       + --------------
-E       + O  |  X  |  O
-
-tests/test_main.py:275: AssertionError
-===================== 1 failed, 16 passed in 0.13 seconds ======================
+========================== 17 passed in 0.09 seconds ===========================

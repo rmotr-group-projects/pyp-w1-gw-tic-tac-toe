@@ -202,9 +202,19 @@ def get_board_as_string(game):
     
     board_str = '\n'
     for row in board:
-    		board_str = board_str + row[0] + '  |  ' + row[1] + '  |  ' + row[2] + '\n--------------\n'
-    return board_str[:15]
+            #board_str = ('{0}{1}  |  {2}  |  {3}  \n--------------\n'.
+            #             format(board_str, row[0], row[1], row[2]))
+    		board_str += row[0] + '  |  ' + row[1] + '  |  ' + row[2] + '\n--------------\n'
+    
+    return board_str[:-15]
 
+    # board_str2 =     """
+    #     board[0][0]  |  board[0][1]  |  board[0][2]
+    #     --------------
+    #     board[1][0]  |  board[1][1]  |  board[1][2]
+    #     --------------
+    #     board[2][0]  |  board[2][1]  |  board[2][2]
+    #     """
 
 def get_next_turn(game):
     """
