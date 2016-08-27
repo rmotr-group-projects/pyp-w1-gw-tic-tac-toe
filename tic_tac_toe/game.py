@@ -11,7 +11,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    if board[position(0)][position(1)] == "-":
+    if board[position[0]][position[1]] == "-":
         return True
     else:
         return False
@@ -153,7 +153,8 @@ def move(game, player, position):
     # Do validity checks first---------------------
     # Check if postition is valid
     if not _position_is_valid(position):
-        raise InvalidMovement("Position out of range")
+        # raise InvalidMovement("Position out of range")
+        raise InvalidMovement("Position is invalid.")
         
     # Check if position is taken
     if not  _position_is_empty_in_board(position, game['board']):
@@ -165,33 +166,42 @@ def move(game, player, position):
         
     # Check if correct player made move
     if game['next_turn'] != player:
-        raise InvalidMovement("{} moves next".format(game['next_turn']))
+        raise InvalidMovement('"{}" moves next'.format(game['next_turn']))
     
     # Make Move---------------------
+    game['board'][position[0]][position[1]] = player
     
+    #Update Winner status
+    game['winner'] = _check_winning_combinations(game['board'], player)
     
     # Do post-move checks ---------------------
-    # (see if game is over or tied)
+    # Check if there is a winner
+    winner = get_winner(game)
+    if winner:
+        raise GameOver('"{}" wins!'.format(winner))
     
+    # Check if game is tied
+    if _board_is_full(game['board']):
+        raise GameOver("GameOver: Game is tied!")
     
-    #pytest tests/test_module.py::[TEST-CLASS]::[TEST-METHOD]
-        
-    return None    
+    # Update next_turn
+    if player == game['player1']:
+        game['next_turn'] = game['player2']
+    else:
+        game['next_turn'] = game['player1']
+    
 
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    pass
-
-    # board_string = '''
+    #pass
+    board = game['board']
     
-    #     (0,0) | (0,1) | (0,2)
-    #     ---------------------
-    #     (1,0) | (1,1) | (1,2)
-    #     ---------------------
-    #     (2,0) | (2,1) | (2,2)
-    #     '''
+    board_str = '\n'
+    for row in board:
+    		board_str = board_str + row[0] +'  |  '+ row[1] +'  |  '+ row[2] + '\n--------------\n'
+    return board_str[:16]
 
 
 def get_next_turn(game):
