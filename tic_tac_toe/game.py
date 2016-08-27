@@ -76,12 +76,26 @@ def _is_winning_combination(board, combination, player):#########lathos mallon
     """
 
 
-def _check_winning_combinations(board, player="O"):#can i do something here real quickWAIT ill commit first kk
+def _check_winning_combinations(board, player="O"):#doit
     for item in board:#checing the rows first
         row = all (x == player for x in item )
         if row:
+            return player #what you do has to much typing waste of time, as my method... go on doit
+    #make neater lol
+    #let me see if i can fit in a for loop
+    col={'1':[ board[0][0], board[1][0], board[2][0] ],
+         '2':[ board[0][1], board[1][1], board[2][1] ],
+         '3':[ board[0][2], board[1][2], board[2][2] ],
+         '4':[ board[0][0], board[1][1], board[2][2] ],
+         '5':[ board[0][2], board[1][1], board[2][0] ]
+    }
+    for key in col:
+        check=all(x==player for x in col[key])
+        if check:
             return player
-            
+    
+    
+    '''
     col = [ board[0][0], board[1][0], board[2][0] ]
     check = all( x == player for x in col )
     if check:
@@ -106,7 +120,7 @@ def _check_winning_combinations(board, player="O"):#can i do something here real
     check = all( x == player for x in col )
     if check:
         return player
-        
+    '''    #u see it?
     return None
     """
     There are 8 posible combinations (3 horizontals, 3, verticals and 2 diagonals)
