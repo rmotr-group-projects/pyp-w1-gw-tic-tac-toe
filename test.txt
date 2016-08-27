@@ -9,92 +9,9 @@ rootdir: /home/ubuntu/workspace, inifile:
 plugins: cov-2.2.1
 collected 17 items
 
-tests/test_main.py .........FFFF..F.
+tests/test_main.py ...............F.
 
 =================================== FAILURES ===================================
-________________________ TestTicTacToe.test_play_O_wins ________________________
-
-self = <tests.test_main.TestTicTacToe testMethod=test_play_O_wins>
-
-    def test_play_O_wins(self):
-        # [
-        #     ["O", "X", "X"],
-        #     ["X", "O", "-"],
-        #     ["-", "-", "O"],   <--- "O" wins
-        # ]
-        move(self.game, self.x, position=(0, 1))
-        move(self.game, self.o, position=(0, 0))
-        move(self.game, self.x, position=(0, 2))
-        move(self.game, self.o, position=(1, 1))
-        move(self.game, self.x, position=(1, 0))
-        with self.assertRaisesRegexp(GameOver, '"O" wins!'):
-            move(self.game, self.o, position=(2, 2))
-        self.assertEqual(get_winner(self.game), self.o)
-        with self.assertRaisesRegexp(InvalidMovement, 'Game is over'):
->           move(self.game, self.x, position=(2, 0))
-E           AssertionError: "Game is over" does not match "The game is over."
-
-tests/test_main.py:244: AssertionError
-________________________ TestTicTacToe.test_play_X_wins ________________________
-
-self = <tests.test_main.TestTicTacToe testMethod=test_play_X_wins>
-
-    def test_play_X_wins(self):
-        # [
-        #     ["X", "X", "X"],  <--- "X" wins
-        #     ["O", "O", "-"],
-        #     ["-", "-", "-"],
-        # ]
-        move(self.game, self.x, position=(0, 0))
-        move(self.game, self.o, position=(1, 0))
-        move(self.game, self.x, position=(0, 1))
-        move(self.game, self.o, position=(1, 1))
-        with self.assertRaisesRegexp(GameOver, '"X" wins!'):
-            move(self.game, self.x, position=(0, 2))
-        self.assertEqual(get_winner(self.game), self.x)
-        with self.assertRaisesRegexp(InvalidMovement, 'Game is over'):
->           move(self.game, self.o, position=(2, 2))
-E           AssertionError: "Game is over" does not match "The game is over."
-
-tests/test_main.py:227: AssertionError
-___________________ TestTicTacToe.test_play_invalid_position ___________________
-
-self = <tests.test_main.TestTicTacToe testMethod=test_play_invalid_position>
-
-    def test_play_invalid_position(self):
-        with self.assertRaisesRegexp(InvalidMovement,
-                                     'Position out of range.'):
->           move(self.game, self.x, position=(9, 8))
-E           AssertionError: "Position out of range." does not match "Position is invalid."
-
-tests/test_main.py:254: AssertionError
-______________________ TestTicTacToe.test_play_no_winner _______________________
-
-self = <tests.test_main.TestTicTacToe testMethod=test_play_no_winner>
-
-    def test_play_no_winner(self):
-        # [
-        #     ["X", "O", "X"],
-        #     ["O", "O", "X"],
-        #     ["X", "X", "O"],
-        # ]
-        move(self.game, self.x, position=(0, 0))
-        move(self.game, self.o, position=(0, 1))
-        move(self.game, self.x, position=(0, 2))
-        move(self.game, self.o, position=(1, 0))
-        move(self.game, self.x, position=(1, 2))
-        move(self.game, self.o, position=(1, 1))
-        move(self.game, self.x, position=(2, 0))
-        move(self.game, self.o, position=(2, 2))
-        with self.assertRaisesRegexp(GameOver, 'Game is tied!'):
-            move(self.game, self.x, position=(2, 1))
-        self.assertEqual(get_winner(self.game), None)
-        self.assertTrue(_board_is_full(self.game['board']))
-        with self.assertRaisesRegexp(InvalidMovement, 'Game is over.'):
->           move(self.game, self.o, position=(0, 0))
-E           AssertionError: "Game is over." does not match "Position already taken."
-
-tests/test_main.py:211: AssertionError
 ________________________ TestTicTacToe.test_print_board ________________________
 
 self = <tests.test_main.TestTicTacToe testMethod=test_print_board>
@@ -113,13 +30,13 @@ self = <tests.test_main.TestTicTacToe testMethod=test_print_board>
     O  |  X  |  O
     """
 >       self.assertEqual(get_board_as_string(self.game), expected)
-E       AssertionError: '\nO  |  O  |  X\n-' != '\nO  |  O  |  X\n--------------\nO  |  X  |  X\n-----------[16 chars] O\n'
+E       AssertionError: '\nO  |  O  |  X\n' != '\nO  |  O  |  X\n--------------\nO  |  X  |  X\n----------[17 chars] O\n'
 E         
 E         O  |  O  |  X
-E       - -+ --------------
+E       + --------------
 E       + O  |  X  |  X
 E       + --------------
 E       + O  |  X  |  O
 
 tests/test_main.py:275: AssertionError
-===================== 5 failed, 12 passed in 0.15 seconds ======================
+===================== 1 failed, 16 passed in 0.13 seconds ======================

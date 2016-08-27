@@ -202,6 +202,7 @@ def get_board_as_string(game):
     
     board_str = '\n'
     for row in board:
+            board_str = '{board_str}[]
     		board_str = board_str + row[0] + '  |  ' + row[1] + '  |  ' + row[2] + '\n--------------\n'
     return board_str[:15]
 
