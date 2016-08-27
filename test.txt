@@ -1,0 +1,270 @@
+
+
+[0;32m### Running tests ### [0m
+
+PYTHONPATH=. py.test tests
+============================= test session starts ==============================
+platform linux -- Python 3.4.3, pytest-2.9.2, py-1.4.31, pluggy-0.3.1
+rootdir: /home/ubuntu/workspace, inifile: 
+plugins: cov-2.2.1
+collected 17 items
+
+tests/test_main.py ...F..F..FFFFFFF.
+
+=================================== FAILURES ===================================
+_______________________ TestTicTacToe.test_get_next_turn _______________________
+
+self = <tests.test_main.TestTicTacToe testMethod=test_get_next_turn>
+
+    def test_get_next_turn(self):
+        self.assertEqual(get_next_turn(self.game), self.x)
+>       move(self.game, self.x, position=(0, 0))
+
+tests/test_main.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+game = {'board': [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']], 'next_turn': 'X', 'player1': 'X', 'player2': 'O', ...}
+player = 'X', position = (0, 0)
+
+    def move(game, player, position):
+        """
+        Performs a player movement in the game. Must ensure all the pre requisites
+        checks before the actual movement is done.
+        After registering the movement it must check if the game is over.
+        """
+        # Do validity checks first---------------------
+        # Check if postition is valid
+        if not _position_is_valid(position):
+            raise InvalidMovement("Position out of range")
+    
+        # Check if position is taken
+>       if not  _position_is_empty_in_board(position, game['Game']):
+E       KeyError: 'Game'
+
+tic_tac_toe/game.py:159: KeyError
+_____________________ TestTicTacToe.test_is_empty_position _____________________
+
+self = <tests.test_main.TestTicTacToe testMethod=test_is_empty_position>
+
+    def test_is_empty_position(self):
+        board = self.game['board']
+        empty_positions = [
+            (0,0), (0,1), (0,2),
+            (1,0), (1,1), (1,2),
+            (2,0), (2,1), (2,2),
+        ]
+        for position in empty_positions:
+>           self.assertTrue(_position_is_empty_in_board(position, board))
+
+tests/test_main.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+position = (0, 0), board = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+
+    def _position_is_empty_in_board(position, board):
+        """
+        Checks if given position is empty ("-") in the board.
+    
+        :param position: Two-elements tuple representing a
+                         position in the board. Example: (0, 1)
+        :param board: Game board.
+    
+        Returns True if given position is empty, False otherwise.
+        """
+>       if board[position(0)][position(1)] == "-":
+E       TypeError: 'tuple' object is not callable
+
+tic_tac_toe/game.py:14: TypeError
+________________________ TestTicTacToe.test_play_O_wins ________________________
+
+self = <tests.test_main.TestTicTacToe testMethod=test_play_O_wins>
+
+    def test_play_O_wins(self):
+        # [
+        #     ["O", "X", "X"],
+        #     ["X", "O", "-"],
+        #     ["-", "-", "O"],   <--- "O" wins
+        # ]
+>       move(self.game, self.x, position=(0, 1))
+
+tests/test_main.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+game = {'board': [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']], 'next_turn': 'X', 'player1': 'X', 'player2': 'O', ...}
+player = 'X', position = (0, 1)
+
+    def move(game, player, position):
+        """
+        Performs a player movement in the game. Must ensure all the pre requisites
+        checks before the actual movement is done.
+        After registering the movement it must check if the game is over.
+        """
+        # Do validity checks first---------------------
+        # Check if postition is valid
+        if not _position_is_valid(position):
+            raise InvalidMovement("Position out of range")
+    
+        # Check if position is taken
+>       if not  _position_is_empty_in_board(position, game['Game']):
+E       KeyError: 'Game'
+
+tic_tac_toe/game.py:159: KeyError
+________________________ TestTicTacToe.test_play_X_wins ________________________
+
+self = <tests.test_main.TestTicTacToe testMethod=test_play_X_wins>
+
+    def test_play_X_wins(self):
+        # [
+        #     ["X", "X", "X"],  <--- "X" wins
+        #     ["O", "O", "-"],
+        #     ["-", "-", "-"],
+        # ]
+>       move(self.game, self.x, position=(0, 0))
+
+tests/test_main.py:219: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+game = {'board': [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']], 'next_turn': 'X', 'player1': 'X', 'player2': 'O', ...}
+player = 'X', position = (0, 0)
+
+    def move(game, player, position):
+        """
+        Performs a player movement in the game. Must ensure all the pre requisites
+        checks before the actual movement is done.
+        After registering the movement it must check if the game is over.
+        """
+        # Do validity checks first---------------------
+        # Check if postition is valid
+        if not _position_is_valid(position):
+            raise InvalidMovement("Position out of range")
+    
+        # Check if position is taken
+>       if not  _position_is_empty_in_board(position, game['Game']):
+E       KeyError: 'Game'
+
+tic_tac_toe/game.py:159: KeyError
+___________________ TestTicTacToe.test_play_invalid_position ___________________
+
+self = <tests.test_main.TestTicTacToe testMethod=test_play_invalid_position>
+
+    def test_play_invalid_position(self):
+        with self.assertRaisesRegexp(InvalidMovement,
+                                     'Position out of range.'):
+>           move(self.game, self.x, position=(9, 8))
+E           AssertionError: "Position out of range." does not match "Position out of range"
+
+tests/test_main.py:254: AssertionError
+______________________ TestTicTacToe.test_play_no_winner _______________________
+
+self = <tests.test_main.TestTicTacToe testMethod=test_play_no_winner>
+
+    def test_play_no_winner(self):
+        # [
+        #     ["X", "O", "X"],
+        #     ["O", "O", "X"],
+        #     ["X", "X", "O"],
+        # ]
+>       move(self.game, self.x, position=(0, 0))
+
+tests/test_main.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+game = {'board': [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']], 'next_turn': 'X', 'player1': 'X', 'player2': 'O', ...}
+player = 'X', position = (0, 0)
+
+    def move(game, player, position):
+        """
+        Performs a player movement in the game. Must ensure all the pre requisites
+        checks before the actual movement is done.
+        After registering the movement it must check if the game is over.
+        """
+        # Do validity checks first---------------------
+        # Check if postition is valid
+        if not _position_is_valid(position):
+            raise InvalidMovement("Position out of range")
+    
+        # Check if position is taken
+>       if not  _position_is_empty_in_board(position, game['Game']):
+E       KeyError: 'Game'
+
+tic_tac_toe/game.py:159: KeyError
+________________ TestTicTacToe.test_play_one_player_moves_twice ________________
+
+self = <tests.test_main.TestTicTacToe testMethod=test_play_one_player_moves_twice>
+
+    def test_play_one_player_moves_twice(self):
+>       move(self.game, self.x, position=(0, 1))
+
+tests/test_main.py:247: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+game = {'board': [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']], 'next_turn': 'X', 'player1': 'X', 'player2': 'O', ...}
+player = 'X', position = (0, 1)
+
+    def move(game, player, position):
+        """
+        Performs a player movement in the game. Must ensure all the pre requisites
+        checks before the actual movement is done.
+        After registering the movement it must check if the game is over.
+        """
+        # Do validity checks first---------------------
+        # Check if postition is valid
+        if not _position_is_valid(position):
+            raise InvalidMovement("Position out of range")
+    
+        # Check if position is taken
+>       if not  _position_is_empty_in_board(position, game['Game']):
+E       KeyError: 'Game'
+
+tic_tac_toe/game.py:159: KeyError
+________________ TestTicTacToe.test_play_position_already_taken ________________
+
+self = <tests.test_main.TestTicTacToe testMethod=test_play_position_already_taken>
+
+    def test_play_position_already_taken(self):
+>       move(self.game, self.x, position=(0, 0))
+
+tests/test_main.py:257: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+game = {'board': [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']], 'next_turn': 'X', 'player1': 'X', 'player2': 'O', ...}
+player = 'X', position = (0, 0)
+
+    def move(game, player, position):
+        """
+        Performs a player movement in the game. Must ensure all the pre requisites
+        checks before the actual movement is done.
+        After registering the movement it must check if the game is over.
+        """
+        # Do validity checks first---------------------
+        # Check if postition is valid
+        if not _position_is_valid(position):
+            raise InvalidMovement("Position out of range")
+    
+        # Check if position is taken
+>       if not  _position_is_empty_in_board(position, game['Game']):
+E       KeyError: 'Game'
+
+tic_tac_toe/game.py:159: KeyError
+________________________ TestTicTacToe.test_print_board ________________________
+
+self = <tests.test_main.TestTicTacToe testMethod=test_print_board>
+
+    def test_print_board(self):
+        self.game['board'] = [
+            ["O", "O", "X"],
+            ["O", "X", "X"],
+            ["O", "X", "O"],
+        ]
+        expected = """
+    O  |  O  |  X
+    --------------
+    O  |  X  |  X
+    --------------
+    O  |  X  |  O
+    """
+>       self.assertEqual(get_board_as_string(self.game), expected)
+E       AssertionError: None != '\nO  |  O  |  X\n--------------\nO  |  X[35 chars] O\n'
+
+tests/test_main.py:275: AssertionError
+====================== 9 failed, 8 passed in 0.28 seconds ======================

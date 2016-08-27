@@ -1,4 +1,4 @@
-from exceptions import *
+from tic_tac_toe.exceptions import *
 
 # internal helpers
 def _position_is_empty_in_board(position, board):
@@ -29,13 +29,18 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    pass
-
+    
+    #import ipdb ; ipdb.set_trace()
+    
+    # # Make sure position is a tuple
+    if not type(position) == tuple:
+        return False
+    
     # Ensure length = 2 and each entry is between 0 and 2
-    if len(position) != 2:
+    elif len(list(position)) != 2:
         return False
         
-    elif position(0) < 0 or position(0) > 2 or position(1) < 0 or position(1) > 2:
+    elif position[0] < 0 or position[0] > 2 or position[1] < 0 or position[1] > 2:
         return False
         
     else:
@@ -69,7 +74,13 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    pass
+    win_check = lambda combo, board: True if board[combo[0]][combo[1]] == player else False
+    return all([win_check(combo, board) for combo in combination])    # return [lamba combo, board: True if board[combo[0]][combo[1]] == player else False]
+    # 
+    # for i in range(0,2):
+    #     if board[i][]
+        
+    
 
 
 def _check_winning_combinations(board, player):
@@ -85,21 +96,28 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    pass
 
-    # winning_combinations = (
-    #         #Three horizontals (first index all equal)
-    #         ((0, 0), (0, 1), (0, 2)),
-    #         ((1, 0), (1, 1), (1, 2)),
-    #         ((2, 0), (2, 1), (2, 2)),
-    #         #Three verticals (second index all equal)
-    #         ((0, 0), (1, 0), (2, 0)),
-    #         ((0, 1), (1, 1), (2, 1)),
-    #         ((0, 2), (1, 2), (2, 2)),
-    #         #Two diagonals
-    #         ((0, 0), (1, 1), (2, 2)),
-    #         ((0, 2), (1, 1), (2, 0))
-    #     )
+    winning_combinations = (
+            #Three horizontals (first index all equal)
+            ((0, 0), (0, 1), (0, 2)),
+            ((1, 0), (1, 1), (1, 2)),
+            ((2, 0), (2, 1), (2, 2)),
+            #Three verticals (second index all equal)
+            ((0, 0), (1, 0), (2, 0)),
+            ((0, 1), (1, 1), (2, 1)),
+            ((0, 2), (1, 2), (2, 2)),
+            #Two diagonals
+            ((0, 0), (1, 1), (2, 2)),
+            ((0, 2), (1, 1), (2, 0))
+        )
+    
+    for combination in winning_combinations:
+        if _is_winning_combination(board, combination, player):
+            return player
+    
+    return None
+    
+
 
 
 # public interface
@@ -132,13 +150,13 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    # Do validity checks first
+    # Do validity checks first---------------------
     # Check if postition is valid
     if not _position_is_valid(position):
         raise InvalidMovement("Position out of range")
         
     # Check if position is taken
-    if not  _position_is_empty_in_board(position, game['Game']):
+    if not  _position_is_empty_in_board(position, game['board']):
         raise InvalidMovement("Position already taken.")
     
     # If there is a winner or tie(board=full), raise error
@@ -147,7 +165,18 @@ def move(game, player, position):
         
     # Check if correct player made move
     if game['next_turn'] != player:
-        raise InvalidMovement("{} moves next".format(game['next_turn'])
+        raise InvalidMovement("{} moves next".format(game['next_turn']))
+    
+    # Make Move---------------------
+    
+    
+    # Do post-move checks ---------------------
+    # (see if game is over or tied)
+    
+    
+    #pytest tests/test_module.py::[TEST-CLASS]::[TEST-METHOD]
+        
+    return None    
 
 def get_board_as_string(game):
     """
@@ -155,9 +184,18 @@ def get_board_as_string(game):
     """
     pass
 
+    # board_string = '''
+    
+    #     (0,0) | (0,1) | (0,2)
+    #     ---------------------
+    #     (1,0) | (1,1) | (1,2)
+    #     ---------------------
+    #     (2,0) | (2,1) | (2,2)
+    #     '''
+
 
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    pass
+    return game['next_turn']
