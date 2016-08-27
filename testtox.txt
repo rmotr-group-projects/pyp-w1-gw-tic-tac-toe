@@ -1,0 +1,56 @@
+GLOB sdist-make: /home/ubuntu/workspace/setup.py
+py27 inst-nodeps: /home/ubuntu/workspace/.tox/dist/rmotr.com | Tic Tac Toe-0.0.1.zip
+py27 installed: py==1.4.31,pytest==3.0.1,rmotr.com-Tic-Tac-Toe==0.0.1
+py27 runtests: PYTHONHASHSEED='2848812667'
+py27 runtests: commands[0] | python setup.py test
+running test
+Searching for coverage==4.0.3
+Best match: coverage 4.0.3
+Processing coverage-4.0.3-py3.4-linux-x86_64.egg
+
+Using /home/ubuntu/workspace/.eggs/coverage-4.0.3-py3.4-linux-x86_64.egg
+Searching for pytest-cov==2.2.1
+Best match: pytest-cov 2.2.1
+Processing pytest_cov-2.2.1-py3.4.egg
+
+Using /home/ubuntu/workspace/.eggs/pytest_cov-2.2.1-py3.4.egg
+ERROR: InvocationError: '/home/ubuntu/workspace/.tox/py27/bin/python setup.py test'
+py33 create: /home/ubuntu/workspace/.tox/py33
+ERROR: InterpreterNotFound: python3.3
+py34 inst-nodeps: /home/ubuntu/workspace/.tox/dist/rmotr.com | Tic Tac Toe-0.0.1.zip
+py34 installed: py==1.4.31,pytest==3.0.1,rmotr.com-Tic-Tac-Toe==0.0.1
+py34 runtests: PYTHONHASHSEED='2848812667'
+py34 runtests: commands[0] | python setup.py test
+running test
+Searching for coverage==4.0.3
+Best match: coverage 4.0.3
+Processing coverage-4.0.3-py3.4-linux-x86_64.egg
+
+Using /home/ubuntu/workspace/.eggs/coverage-4.0.3-py3.4-linux-x86_64.egg
+Searching for pytest-cov==2.2.1
+Best match: pytest-cov 2.2.1
+Processing pytest_cov-2.2.1-py3.4.egg
+
+Using /home/ubuntu/workspace/.eggs/pytest_cov-2.2.1-py3.4.egg
+ERROR: InvocationError: '/home/ubuntu/workspace/.tox/py34/bin/python setup.py test'
+py35 inst-nodeps: /home/ubuntu/workspace/.tox/dist/rmotr.com | Tic Tac Toe-0.0.1.zip
+py35 installed: py==1.4.31,pytest==3.0.1,rmotr.com-Tic-Tac-Toe==0.0.1
+py35 runtests: PYTHONHASHSEED='2848812667'
+py35 runtests: commands[0] | python setup.py test
+running test
+Searching for coverage==4.0.3
+Best match: coverage 4.0.3
+Processing coverage-4.0.3-py3.5-linux-x86_64.egg
+
+Using /home/ubuntu/workspace/.eggs/coverage-4.0.3-py3.5-linux-x86_64.egg
+Searching for pytest-cov==2.2.1
+Best match: pytest-cov 2.2.1
+Processing pytest_cov-2.2.1-py3.5.egg
+
+Using /home/ubuntu/workspace/.eggs/pytest_cov-2.2.1-py3.5.egg
+ERROR: InvocationError: '/home/ubuntu/workspace/.tox/py35/bin/python setup.py test'
+___________________________________ summary ____________________________________
+ERROR:   py27: commands failed
+ERROR:   py33: InterpreterNotFound: python3.3
+ERROR:   py34: commands failed
+ERROR:   py35: commands failed
