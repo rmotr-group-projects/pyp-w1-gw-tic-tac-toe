@@ -1,3 +1,5 @@
+from exceptions import *
+
 # internal helpers
 def _position_is_empty_in_board(position, board):
     """
@@ -9,7 +11,10 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    pass
+    if board[position(0)][position(1)] == "-":
+        return True
+    else:
+        return False
 
 
 def _position_is_valid(position):
@@ -26,6 +31,17 @@ def _position_is_valid(position):
     """
     pass
 
+    # Ensure length = 2 and each entry is between 0 and 2
+    if len(position) != 2:
+        return False
+        
+    elif position(0) < 0 or position(0) > 2 or position(1) < 0 or position(1) > 2:
+        return False
+        
+    else:
+        return True
+    
+
 
 def _board_is_full(board):
     """
@@ -33,7 +49,13 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    pass
+    board_full = all([True if (c != '-') else False for r in board for c in r])
+    if board_full:
+        return True
+    else:
+        return False
+
+
 
 
 def _is_winning_combination(board, combination, player):
@@ -65,21 +87,44 @@ def _check_winning_combinations(board, player):
     """
     pass
 
+    # winning_combinations = (
+    #         #Three horizontals (first index all equal)
+    #         ((0, 0), (0, 1), (0, 2)),
+    #         ((1, 0), (1, 1), (1, 2)),
+    #         ((2, 0), (2, 1), (2, 2)),
+    #         #Three verticals (second index all equal)
+    #         ((0, 0), (1, 0), (2, 0)),
+    #         ((0, 1), (1, 1), (2, 1)),
+    #         ((0, 2), (1, 2), (2, 2)),
+    #         #Two diagonals
+    #         ((0, 0), (1, 1), (2, 2)),
+    #         ((0, 2), (1, 1), (2, 0))
+    #     )
+
 
 # public interface
 def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    pass
-
+    game = {
+        'player1': player1,
+        'player2': player2,
+        'board': [
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+        ],
+        'next_turn': player1,
+        'winner': None
+    }
+    return game
 
 def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
     """
-    pass
-
+    return game['winner']
 
 def move(game, player, position):
     """
@@ -87,8 +132,22 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    pass
-
+    # Do validity checks first
+    # Check if postition is valid
+    if not _position_is_valid(position):
+        raise InvalidMovement("Position out of range")
+        
+    # Check if position is taken
+    if not  _position_is_empty_in_board(position, game['Game']):
+        raise InvalidMovement("Position already taken.")
+    
+    # If there is a winner or tie(board=full), raise error
+    if get_winner(game) or _board_is_full(game['board']):
+        raise InvalidMovement('The game is over.')
+        
+    # Check if correct player made move
+    if game['next_turn'] != player:
+        raise InvalidMovement("{} moves next".format(game['next_turn'])
 
 def get_board_as_string(game):
     """
