@@ -46,8 +46,8 @@ def _board_is_full(board):
         for position in line:
             if position != '-':
                 return False
-            else:
-                return True
+                
+    return True
     
     #for line in board:
         #for position in line:
@@ -69,11 +69,11 @@ def _is_winning_combination(board, combination, player):
     player, False otherwise.
     """
     
-    for x, y in combination:
-        if board[x][y] != player:
+    for win in combination:
+        if board[win[0]][win[1]] != player:
             return False
-        else:
-            return True
+    
+    return True
 
     #for position in combination:
         #if board[position[0][1]] != player:
@@ -118,8 +118,8 @@ def _check_winning_combinations(board, player):
     for win in combinations:
         if _is_winning_combination(board, win, player):
             return player
-        else:
-            return None
+    
+    return None
     
     """
     position1 = combination[0]
@@ -181,7 +181,7 @@ def move(game, player, position):
             game['winner'] = player
             game['next_turn'] = None
             raise GameOver("\"{}\" wins!".format(player))
-        elif _board_is_full(game['board']) and game['winner'] == None: 
+        elif _board_is_full(game['board']): 
             game['next_turn'] = None
             raise GameOver("Game is tied!")
         elif not _board_is_full(game['board']):
