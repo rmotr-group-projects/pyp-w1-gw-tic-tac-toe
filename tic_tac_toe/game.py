@@ -42,12 +42,13 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    
     for line in board:
         for position in line:
             if position == "-":
                 return False
+
     return True
+    
 def _is_winning_combination(board, combination, player):
     """
     Checks if all 3 positions in given combination are occupied by given player.
@@ -162,27 +163,30 @@ def move(game, player, position):
     After registering the movement it must check if the game is over.
     """
     if get_next_turn(game) == None:
-        raise GameOver("The Game is Over")
-    elif get_next_turn(game) != player:
+        raise InvalidMovement("Game is over.")
+    if get_next_turn(game) != player:
         raise InvalidMovement("\"{}\" moves next".format(game['next_turn']))
-    elif not _position_is_valid(position):
+    if not _position_is_valid(position):
         raise InvalidMovement("Position out of range.")
-    elif not _position_is_empty_in_board(position, game['board']):
+    if not _position_is_empty_in_board(position, game['board']):
         raise InvalidMovement("Position already taken.")
+        
+    game['board'][position[0]][position[1]] = player
+    if _check_winning_combinations(game['board'], player):
+        game['winner'] = player
+        game['next_turn'] = None
+        raise GameOver("\"{}\" wins!".format(player))
+    elif _board_is_full(game['board']):
+        game['winner'] = None
+        game['next_turn'] = None
+        raise GameOver("Game is tied!")
     else:
-        game['board'][position[0]][position[1]] = player
-        if _check_winning_combinations(game['board'], player) == player:
-            game['winner'] = player
-            game['next_turn'] = None
-            raise GameOver("\"{}\" wins!".format(player))
-        elif _board_is_full(game['board']): 
-            game['next_turn'] = None
-            raise GameOver("Game is tied!")
-        elif not _board_is_full(game['board']):
-            if player == game['player1']:
-                game['next_turn'] = game['player2']
-            else:
-                game['next_turn'] = game['player1']
+        game['winner'] = None
+        if player == game['player1']:
+            game['next_turn'] = game['player2']
+        else:
+            game['next_turn'] = game['player1']
+        return
 """
 if game['next_turn'] != player:
         raise InvalidMovement("\"{}\" moves next".format(game['next_turn']))
