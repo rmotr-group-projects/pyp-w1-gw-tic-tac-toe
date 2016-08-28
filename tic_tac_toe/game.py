@@ -42,18 +42,12 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
+    
     for line in board:
         for position in line:
-            if position != '-':
+            if position == "-":
                 return False
-                
     return True
-    
-    #for line in board:
-        #for position in line:
-            #if position != "-":
-                #return False
-
 def _is_winning_combination(board, combination, player):
     """
     Checks if all 3 positions in given combination are occupied by given player.
