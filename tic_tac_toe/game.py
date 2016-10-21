@@ -24,7 +24,10 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    pass
+    if not isinstance(position, tuple) or len(position) > 2 or not all(isinstance(x, int) for x in position):
+        return False
+
+    return True
 
 
 def _board_is_full(board):
