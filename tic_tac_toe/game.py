@@ -9,7 +9,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    return board[position[0][position[1]]] == "-"
+    return board[position[0]][position[1]] == "-"
 
 
 def _position_is_valid(position):
@@ -71,7 +71,17 @@ def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    pass
+    return {
+    'player1': "X",
+    'player2': "O",
+    'board': [
+        ["-", "-", "-"],
+        ["-", "-", "-"],
+        ["-", "-", "-"],
+    ],
+    'next_turn': "X",
+    'winner': None
+}
 
 
 def get_winner(game):
