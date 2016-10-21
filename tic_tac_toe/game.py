@@ -1,3 +1,4 @@
+from .exceptions import InvalidMovement, GameOver
 # internal helpers
 def _position_is_empty_in_board(position, board):
     """
@@ -120,7 +121,31 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    pass
+    if not get_next_turn(game) == player:
+        raise InvalidMovement('"' + str(get_next_turn(game)) + '" moves next.')
+
+    if not _position_is_valid(position):
+        raise InvalidMovement("Position out of range.")
+
+    if not _position_is_empty_in_board(position, game['board']):
+        raise InvalidMovement("Position already taken.")
+
+    if _board_is_full(game['board']):
+            raise GameOver('Game is over.')
+
+    else:
+        game['board'][position[0]][position[1]] = player
+
+        game['winner'] == _check_winning_combinations(game['board'], player)
+
+        if not game['winner'] == None:
+            raise GameOver('"' + str(player) + '" wins!')
+
+        elif _board_is_full(game['board']):
+            raise GameOver('Game is tied!')
+
+        next_player = "X" if player == "O" else "O"
+        game['next_turn'] == next_player
 
 
 def get_board_as_string(game):
@@ -134,4 +159,4 @@ def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    pass
+    return game['next_turn']
