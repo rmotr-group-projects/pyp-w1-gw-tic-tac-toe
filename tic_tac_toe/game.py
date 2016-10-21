@@ -54,7 +54,10 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    pass
+    for c in combination:
+        if board[c[0]][c[1]] != player:
+            return False
+    return True
 
 
 def _check_winning_combinations(board, player):
@@ -70,8 +73,21 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    pass
+    winning_combinations = (
+        ((0, 0), (0, 1), (0, 2)),
+        ((1, 0), (1, 1), (1, 2)),
+        ((2, 0), (2, 1), (2, 2)),
+        ((0, 0), (1, 0), (2, 0)),
+        ((0, 1), (1, 1), (2, 1)),
+        ((0, 2), (1, 2), (2, 2)),
+        ((0, 0), (1, 1), (2, 2)),
+        ((0, 2), (1, 1), (2, 0))
+    )
 
+    for combination in winning_combinations:
+        if _is_winning_combination(board, combination, player):
+            return player
+    return None
 
 # public interface
 def start_new_game(player1, player2):
@@ -95,7 +111,7 @@ def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
     """
-    pass
+    return game['winner']
 
 
 def move(game, player, position):
