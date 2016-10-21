@@ -9,7 +9,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    pass
+    return board[position[0][position[1]]] == "-"
 
 
 def _position_is_valid(position):

@@ -60,3 +60,12 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+#
+.idea/
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/pyp-w1-gw-tic-tac-toe.iml
+.idea/workspace.xml
+.idea/vcs.xml
