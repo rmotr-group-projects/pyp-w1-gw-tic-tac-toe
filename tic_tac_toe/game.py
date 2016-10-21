@@ -36,7 +36,11 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    pass
+    for row in board:
+        for colum in row:
+            if colum == "-":
+                return False
+    return True
 
 
 def _is_winning_combination(board, combination, player):

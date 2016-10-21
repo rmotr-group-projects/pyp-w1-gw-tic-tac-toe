@@ -69,3 +69,5 @@ target/
 .idea/pyp-w1-gw-tic-tac-toe.iml
 .idea/workspace.xml
 .idea/vcs.xml
+
+test.py
