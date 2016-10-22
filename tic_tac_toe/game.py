@@ -25,12 +25,11 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    # print(position)
+    print(position)
     if not isinstance(position, tuple) \
             or len(position) > 2 \
             or not all(isinstance(x, int) for x in position) \
-            or any(i > 2 for i in position) \
-            or any(x for x in position if x < 0):
+            or any(x for x in position if not 0 <= x <= 2):
         return False
 
     return True
