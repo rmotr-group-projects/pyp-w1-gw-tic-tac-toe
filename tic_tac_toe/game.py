@@ -26,7 +26,8 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    if isinstance(position, tuple) and len(position) == 2 and position[0] in [0, 1, 2] and position[1] in [0, 1, 2]:
+    if isinstance(position, tuple) and len(position) == 2 \
+        and position[0] in [0, 1, 2] and position[1] in [0, 1, 2]:
         return True
     return False
 
