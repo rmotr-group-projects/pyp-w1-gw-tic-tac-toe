@@ -6,6 +6,7 @@ def _switch_turns(game, player):
         game['next_turn'] = game['player2']
     else:
         game['next_turn'] = game['player1']
+
             
 def _position_is_empty_in_board(position, board):
     """
@@ -73,6 +74,7 @@ def _is_winning_combination(board, combination, player):
         row = position[0]
         column = position[1]
         marker_present = board[row][column]
+
         if marker_present != player:
             return False
 
