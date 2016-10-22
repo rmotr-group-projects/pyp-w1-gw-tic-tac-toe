@@ -44,14 +44,18 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    for row in (0, 1, 2):
-        for column in (0, 1, 2):
+    for row in range(3):
+        for column in range(3):
             if _position_is_empty_in_board((row, column), board):
                 return False
 
     return True
 
-    # works but might be slower than the uncommented scenario. must benchmark
+    # works but might be slower than the uncommented scenario
+    # since for the first scenario, the loop breaks
+    # if the first position in the board is already occupied.
+    # must benchmark
+
     # positions = [
     #     (0,0), (0,1), (0,2),
     #     (1,0), (1,1), (1,2),
@@ -95,13 +99,6 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    # positions = [
-    #     (0, 0), (0, 1), (0, 2),
-    #     (1, 0), (1, 1), (1, 2),
-    #     (2, 0), (2, 1), (2, 2)
-    # ]
-    # import ipdb; ipdb.set_trace()
-    # rows []
     rows = (
         ((0, 0), (0, 1), (0, 2)),
         ((1, 0), (1, 1), (1, 2)),
@@ -159,20 +156,20 @@ def move(game, player, position):
     """
     board = game['board']
     current_player = get_next_turn(game)
-    
+
     if _board_is_full(board) or game['winner'] != None:
         raise InvalidMovement('Game is over.')
-        
+
     if current_player != player:
         raise InvalidMovement('"' + current_player + '" moves next.')
 
     if not _position_is_valid(position):
         raise InvalidMovement('Position out of range.')
+
     if not _position_is_empty_in_board(position, board):
         raise InvalidMovement('Position already taken.')
 
     game['board'][position[0]][position[1]] = player
-
 
     winner = _check_winning_combinations(board, player)
 
@@ -187,6 +184,7 @@ def move(game, player, position):
         else:
             game['next_turn'] = game['player1']
 
+
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
@@ -199,7 +197,7 @@ def get_board_as_string(game):
     whitespace = "\n"
     divider = "\n--------------\n"
     formatted_board = whitespace + row1 + divider + row2 + divider + row3 + whitespace
-    
+
     return formatted_board
 
 
