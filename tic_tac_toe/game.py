@@ -1,4 +1,6 @@
 # internal helpers
+from .exceptions import InvalidMovement, GameOver
+
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -9,7 +11,10 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    pass
+    row = position[0]
+    column = position[1]
+
+    return board[row][column] == '-'
 
 
 def _position_is_valid(position):
@@ -24,7 +29,13 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    pass
+    valid_positions = [
+        (0,0), (0,1), (0,2),
+        (1,0), (1,1), (1,2),
+        (2,0), (2,1), (2,2),
+    ]
+
+    return position in valid_positions
 
 
 def _board_is_full(board):
@@ -33,7 +44,21 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    pass
+    for row in (0, 1, 2):
+        for column in (0, 1, 2):
+            if _position_is_empty_in_board((row, column), board):
+                return False
+
+    return True
+
+    # works but might be slower than the uncommented scenario. must benchmark
+    # positions = [
+    #     (0,0), (0,1), (0,2),
+    #     (1,0), (1,1), (1,2),
+    #     (2,0), (2,1), (2,2),
+    # ]
+
+    # return '-' in positions
 
 
 def _is_winning_combination(board, combination, player):
@@ -47,7 +72,14 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    pass
+    for position in combination:
+        row = position[0]
+        column = position[1]
+        marker_present = board[row][column]
+        if marker_present != player:
+            return False
+
+    return True
 
 
 def _check_winning_combinations(board, player):
@@ -63,7 +95,37 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    pass
+    # positions = [
+    #     (0, 0), (0, 1), (0, 2),
+    #     (1, 0), (1, 1), (1, 2),
+    #     (2, 0), (2, 1), (2, 2)
+    # ]
+    # import ipdb; ipdb.set_trace()
+    # rows []
+    rows = (
+        ((0, 0), (0, 1), (0, 2)),
+        ((1, 0), (1, 1), (1, 2)),
+        ((2, 0), (2, 1), (2, 2))
+    )
+
+    columns = (
+        ((0, 0), (1, 0), (2, 0)),
+        ((0, 1), (1, 1), (2, 1)),
+        ((0, 2), (1, 2), (2, 2))
+    )
+
+    diagonals = (
+        ((0, 0), (1, 1), (2, 2)),
+        ((0, 2), (1, 1), (2, 0))
+    )
+
+    winning_combinations = rows + columns + diagonals
+
+    for combination in winning_combinations:
+        if _is_winning_combination(board, combination, player):
+            return player
+
+    return None
 
 
 # public interface
@@ -71,14 +133,22 @@ def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    pass
+    board = [['-' for columns in range(3)] for rows in range(3)]
+    game = {
+        'player1': player1,
+        'player2': player2,
+        'board': board,
+        'next_turn': player1,
+        'winner': None
+    }
 
+    return game
 
 def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
     """
-    pass
+    return game['winner']
 
 
 def move(game, player, position):
@@ -87,18 +157,54 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    pass
+    board = game['board']
+    current_player = get_next_turn(game)
+    
+    if _board_is_full(board) or game['winner'] != None:
+        raise InvalidMovement('Game is over.')
+        
+    if current_player != player:
+        raise InvalidMovement('"' + current_player + '" moves next.')
 
+    if not _position_is_valid(position):
+        raise InvalidMovement('Position out of range.')
+    if not _position_is_empty_in_board(position, board):
+        raise InvalidMovement('Position already taken.')
+
+    game['board'][position[0]][position[1]] = player
+
+
+    winner = _check_winning_combinations(board, player)
+
+    if winner:
+        game['winner'] = player
+        raise GameOver('"' + player + '" wins!')
+    elif _board_is_full(board):
+        raise GameOver('Game is tied!')
+    else: # can refactor into separate function later
+        if player == game['player1']:
+            game['next_turn'] = game['player2']
+        else:
+            game['next_turn'] = game['player1']
 
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    pass
+    board = game['board']
+
+    row1 = board[0][0] + '  |  ' + board[0][1] + '  |  ' + board[0][2]
+    row2 = board[1][0] + '  |  ' + board[1][1] + '  |  ' + board[1][2]
+    row3 = board[2][0] + '  |  ' + board[2][1] + '  |  ' + board[2][2]
+    whitespace = "\n"
+    divider = "\n--------------\n"
+    formatted_board = whitespace + row1 + divider + row2 + divider + row3 + whitespace
+    
+    return formatted_board
 
 
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    pass
+    return game['next_turn']
