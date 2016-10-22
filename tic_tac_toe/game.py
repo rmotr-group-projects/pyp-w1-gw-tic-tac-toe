@@ -25,9 +25,16 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    print(position)
+
+    # Make sure that...
+    #    position is a tuple
+    #    position's length is 2
+    #    every value in the tuple is an int
+    #    every int in the tuple is either 0, 1 or 2
+    # if not, return False
+
     if not isinstance(position, tuple) \
-            or len(position) > 2 \
+            or len(position) != 2 \
             or not all(isinstance(x, int) for x in position) \
             or any(x for x in position if not 0 <= x <= 2):
         return False
@@ -41,10 +48,13 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
+
+    # looks for "-" in every position in the board
+    # returns False if it finds one
     for row in board:
-        for colum in row:
-            if colum == "-":
-                return False
+        if any(column for column in row if column == "-"):
+            return False
+
     return True
 
 
@@ -59,9 +69,22 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    for c in combination:
-        if board[c[0]][c[1]] != player:
+
+    """
+    ### Code before refactoring into a comprehension list:
+
+    for a_tuple in combination:
+
+        # e.g. a_tuple = (0,0)
+        # if board[0][0] != "X"
+        if board[a_tuple[0]][a_tuple[1]] != player:
+
             return False
+    """
+
+    if any(a_tuple for a_tuple in combination if board[a_tuple[0]][a_tuple[1]] != player):
+        return False
+
     return True
 
 
@@ -89,9 +112,9 @@ def _check_winning_combinations(board, player):
         ((0, 2), (1, 1), (2, 0))
     )
 
-    for combination in winning_combinations:
-        if _is_winning_combination(board, combination, player):
-            return player
+    if any(combination for combination in winning_combinations if _is_winning_combination(board, combination, player)):
+        return player
+
     return None
 
 # public interface
@@ -100,16 +123,16 @@ def start_new_game(player1, player2):
     Creates and returns a new game configuration.
     """
     return {
-    'player1': "X",
-    'player2': "O",
-    'board': [
-        ["-", "-", "-"],
-        ["-", "-", "-"],
-        ["-", "-", "-"],
-    ],
-    'next_turn': "X",
-    'winner': None
-}
+        'player1': "X",
+        'player2': "O",
+        'board': [
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+        ],
+        'next_turn': "X",
+        'winner': None
+    }
 
 
 def get_winner(game):
@@ -125,59 +148,71 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    #print("p:", player, get_next_turn(game))
+
+    # Is the board full? Or do we already have a winner? Then game is over.
+    if _board_is_full(game['board']) or game['winner'] != None:
+        raise InvalidMovement('Game is over.')
+
+    # if the next player is not the one who should make the move
     if not get_next_turn(game) == player:
-        if _board_is_full(game['board']) or game['winner'] != None:
-            raise InvalidMovement('Game is over.')
-        else:
-            raise InvalidMovement('"' + str(get_next_turn(game)) + '" moves next.')
+        raise InvalidMovement('"' + str(get_next_turn(game)) + '" moves next.')
 
-    print(_position_is_valid(position))
-
+    # make sure the move is in a valid position
     if _position_is_valid(position) == False:
         raise InvalidMovement("Position out of range.")
 
+    # make sure the move in an empty position
     if not _position_is_empty_in_board(position, game['board']):
         raise InvalidMovement("Position already taken.")
 
-    if _board_is_full(game['board']):
-            raise GameOver('Game is over.')
 
+    # Everything seems fine. LET'S PLAY!
+
+    # Put X or O in the position
+    game['board'][position[0]][position[1]] = player
+
+    # Do we have a winner?
+    # game['winner'] = X, O, or None
+    game['winner'] = _check_winning_combinations(game['board'], player)
+
+    # If not None, then we raise the winner
+    if game['winner'] != None:
+        raise GameOver('"' + game['winner'] + '" wins!')
+
+    # No winner? But is the board full now? Then the game is tied.
+    elif _board_is_full(game['board']):
+        raise GameOver('Game is tied!')
+
+    # No winner? Game's not tied? Then game continues.
+    # So let's put the next player in game['next_turn']
     else:
-        game['board'][position[0]][position[1]] = player
-
-        game['winner'] = _check_winning_combinations(game['board'], player)
-        print("Win:", _check_winning_combinations(game['board'], player), game['winner'])
-
-        if game['winner'] != None:
-            raise GameOver('"' + str(player) + '" wins!')
-
-        elif _board_is_full(game['board']):
-            raise GameOver('Game is tied!')
-
-        if player == "O":
-            next_player = "X"
-        else:
-            next_player = "O"
-        #print("next:", next_player)
-        game['next_turn'] = next_player
-        #print("after:", game['next_turn'])
+        game['next_turn'] = "X" if player == "O" else "O"
 
 
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    str_board = "\n"
-    row = 0
-    for i in range(1, 6):
-        if i % 2 != 0:
+    str_board = "\n"  # every board starts with a blank line
+    row = 0  # used to print the board
+
+    # creates a board of 5 lines. 3 rows, 2 dashed.
+    for line in range(1, 6):
+
+        # every odd line
+        if line % 2 != 0:
+
+            # add a row to the string str_board
             str_board += "{}  |  {}  |  {}".format(game['board'][row][0], game['board'][row][1], game['board'][row][2])
+
+            # increment the row
             row += 1
+
+        # every even line
         else:
             str_board += "--------------"
 
-        str_board += "\n"
+        str_board += "\n"  # add line break at the end of every line
 
     return str_board
 
