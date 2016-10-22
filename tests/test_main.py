@@ -248,7 +248,7 @@ class TestTicTacToe(unittest.TestCase):
         with self.assertRaisesRegexp(InvalidMovement, '"O" moves next'):
             move(self.game, self.x, position=(0, 0))
 
-    def test_play_invalid_position(self):
+    def testplay_invalid_position(self):
         with self.assertRaisesRegexp(InvalidMovement,
                                      'Position out of range.'):
             move(self.game, self.x, position=(9, 8))

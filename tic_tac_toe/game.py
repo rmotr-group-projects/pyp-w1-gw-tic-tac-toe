@@ -25,7 +25,10 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    if not isinstance(position, tuple) or len(position) > 2 or not all(isinstance(x, int) for x in position):
+    if not isinstance(position, tuple) \
+            or len(position) > 2 \
+            or not all(isinstance(x, int) for x in position) \
+            or any(i > 2 for i in position):
         return False
 
     return True
@@ -121,10 +124,16 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
+    #print("p:", player, get_next_turn(game))
     if not get_next_turn(game) == player:
-        raise InvalidMovement('"' + str(get_next_turn(game)) + '" moves next.')
+        if _board_is_full(game['board']) or game['winner'] != None:
+            raise InvalidMovement('Game is over.')
+        else:
+            raise InvalidMovement('"' + str(get_next_turn(game)) + '" moves next.')
 
-    if not _position_is_valid(position):
+    print(_position_is_valid(position))
+
+    if _position_is_valid(position) == False:
         raise InvalidMovement("Position out of range.")
 
     if not _position_is_empty_in_board(position, game['board']):
@@ -136,16 +145,22 @@ def move(game, player, position):
     else:
         game['board'][position[0]][position[1]] = player
 
-        game['winner'] == _check_winning_combinations(game['board'], player)
+        game['winner'] = _check_winning_combinations(game['board'], player)
+        print("Win:", _check_winning_combinations(game['board'], player), game['winner'])
 
-        if not game['winner'] == None:
+        if game['winner'] != None:
             raise GameOver('"' + str(player) + '" wins!')
 
         elif _board_is_full(game['board']):
             raise GameOver('Game is tied!')
 
-        next_player = "X" if player == "O" else "O"
-        game['next_turn'] == next_player
+        if player == "O":
+            next_player = "X"
+        else:
+            next_player = "O"
+        #print("next:", next_player)
+        game['next_turn'] = next_player
+        #print("after:", game['next_turn'])
 
 
 def get_board_as_string(game):
