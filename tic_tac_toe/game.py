@@ -167,7 +167,18 @@ def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    pass
+    str_board = "\n"
+    row = 0
+    for i in range(1, 6):
+        if i % 2 != 0:
+            str_board += "{}  |  {}  |  {}".format(game['board'][row][0], game['board'][row][1], game['board'][row][2])
+            row += 1
+        else:
+            str_board += "--------------"
+
+        str_board += "\n"
+
+    return str_board
 
 
 def get_next_turn(game):
