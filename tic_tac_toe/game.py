@@ -179,16 +179,16 @@ def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
+    board_template = """
+{0}  |  {1}  |  {2}
+--------------
+{3}  |  {4}  |  {5}
+--------------
+{6}  |  {7}  |  {8}
+"""
     board = game['board']
-
-    row1 = board[0][0] + '  |  ' + board[0][1] + '  |  ' + board[0][2]
-    row2 = board[1][0] + '  |  ' + board[1][1] + '  |  ' + board[1][2]
-    row3 = board[2][0] + '  |  ' + board[2][1] + '  |  ' + board[2][2]
-    whitespace = "\n"
-    divider = "\n--------------\n"
-    formatted_board = whitespace + row1 + divider + row2 + divider + row3 + whitespace
-
-    return formatted_board
+    
+    return board_template.format(*(board[0] + board[1] + board[2]))
 
 
 def get_next_turn(game):
