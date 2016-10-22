@@ -1,6 +1,12 @@
 # internal helpers
 from .exceptions import InvalidMovement, GameOver
 
+def _switch_turns(game, player):
+    if player == game['player1']:
+        game['next_turn'] = game['player2']
+    else:
+        game['next_turn'] = game['player1']
+            
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -50,19 +56,6 @@ def _board_is_full(board):
                 return False
 
     return True
-
-    # works but might be slower than the uncommented scenario
-    # since for the first scenario, the loop breaks
-    # if the first position in the board is already occupied.
-    # must benchmark
-
-    # positions = [
-    #     (0,0), (0,1), (0,2),
-    #     (1,0), (1,1), (1,2),
-    #     (2,0), (2,1), (2,2),
-    # ]
-
-    # return '-' in positions
 
 
 def _is_winning_combination(board, combination, player):
@@ -178,11 +171,8 @@ def move(game, player, position):
         raise GameOver('"' + player + '" wins!')
     elif _board_is_full(board):
         raise GameOver('Game is tied!')
-    else: # can refactor into separate function later
-        if player == game['player1']:
-            game['next_turn'] = game['player2']
-        else:
-            game['next_turn'] = game['player1']
+    else:
+        _switch_turns(game, player)
 
 
 def get_board_as_string(game):
