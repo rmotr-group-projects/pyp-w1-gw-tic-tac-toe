@@ -1,6 +1,4 @@
-from .exceptions import GameOver, InvalidMovement
-
-#internal helpers
+# internal helpers
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -11,7 +9,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    return board[position[0]][position[1]] == "-"
+    pass
 
 
 def _position_is_valid(position):
@@ -26,15 +24,8 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    if not isinstance(position, tuple):
-        return False
-    if len(position) != 2:
-        return False
-    if position[0] not in [0,1,2]:
-        return False
-    if position[1] not in [0,1,2]:
-        return False
-    return True
+    pass
+
 
 def _board_is_full(board):
     """
@@ -42,12 +33,8 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    for x in range(2):
-        for y in range(2):
-            if(_position_is_empty_in_board((x,y), board)):
-                return False
-    return True
-        
+    pass
+
 
 def _is_winning_combination(board, combination, player):
     """
@@ -60,14 +47,12 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    for pos in combination:
-        if board[pos[0]][pos[1]] != player:
-            return False
-    return True
+    pass
+
 
 def _check_winning_combinations(board, player):
     """
-    There are 8 possible combinations (3 horizontals, 3, verticals and 2 diagonals)
+    There are 8 posible combinations (3 horizontals, 3, verticals and 2 diagonals)
     to win the Tic-tac-toe game.
     This helper loops through all these combinations and checks if any of them
     belongs to the given player.
@@ -78,24 +63,8 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    
-    set_of_combos = ( #row wins
-            ((0,0), (0,1), (0,2)),    
-            ((1,0), (1,1), (1,2)),    
-            ((2,0), (2,1), (2,2)),
-            #column wins
-            ((0,0), (1,0), (2,0)),
-            ((0,1), (1,1), (2,1)),
-            ((0,2), (1,2), (2,2)),
-            #diagonal wins
-            ((0,0), (1,1), (2,2)),
-            ((2,0), (1,1), (0,2))
-            )
-    
-    for combo in set_of_combos:
-        if _is_winning_combination(board, combo, player):
-            return player
-    return None
+    pass
+
 
 # public interface
 def start_new_game(player1, player2):
@@ -127,59 +96,46 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    board = game['board']
-    #check to see if the right player is the one making the move    
-    if player != game['next_turn']:
-        raise InvalidMovement("\""+ game['next_turn'] + "\"" +" moves next.")
-    #position is valid
-    if not _position_is_valid(position):
-        raise InvalidMovement("Position out of range.")
-    # position already taken
-    if not _position_is_empty_in_board(position, board):
-        raise InvalidMovement("Position already taken.")
-    # check if game has ended
-    if game['winner'] != None or _board_is_full(board):
-        raise GameOver("Game is over")
-        
-    # if tests are true, then move
-    board[position[0]][position[1]] = player
-    
-    # check to see if anyone has won
-    # game over if combo match winner
-    
-    if _check_winning_combinations(board, player):
-        game['winner'] = player
-        game['next_turn'] = None
-        raise GameOver("\""+ game['winner'] + "\"" + " wins!") 
-    # game over is board full
-    elif _board_is_full(board):
-        game['next_turn'] = None
-        raise GameOver("Game is tied!")
-    # set next turn to other player
-    else:
-        if game['next_turn'] == game['player1']:
-            game['next_turn'] = game['player2']
-        else: 
-            game['next_turn'] = game['player1']
+   
+    # if tests are true
+    game 
 
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
     board_as_string = ''
-    rows_as_strings = []
-    row_divider = "\n--------------\n"
+    list_of_rows_as_strings = []
     #iterate through each row
     for row in game['board']:
-        row_as_string = ' | '.join(row)
+        #iterate through each element in each row
+        row_as_string = ''
+        for pos in row:
+            
         #add each row to the list of rows with newly formatted elements    
-        rows_as_strings.append(row_as_string)
-    board_as_string = row_divider.join(rows_as_strings) 
+        list_of_rows_as_strings.append(row_as_string)
     #return list of 3 formatted strings 
-    return board_as_string 
+    return list_of_rows_as_strings
+'''    divider = "--------"
+    row_num = 0
+    for row in list_of_rows_as_strings:
+        if row_num < len(list_of_rows_as_strings):
+            row = "\n".join(row) + "\n".join(divider)
+        else:
+            row = "\n".join(row)
+        board_as_string = "\n".join(list_of_rows_as_strings )   
+    return board_as_string '''
 
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    return game['next_turn']
+    if game['winner'] == 'None':
+        return game['next_turn']
+    else:
+        return game['winner']
+    pass
+
+game = start_new_game('X','O')
+x = get_board_as_string(game)
+print x
