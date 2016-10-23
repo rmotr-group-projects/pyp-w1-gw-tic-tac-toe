@@ -144,14 +144,12 @@ def move(game, player, position):
     # if tests are true, then move
     board[position[0]][position[1]] = player
     
-    # check to see if anyone has won
-    # game over if combo match winner
-    
+    # after new move check to see if anyone has won by checking combinations
     if _check_winning_combinations(board, player):
         game['winner'] = player
         game['next_turn'] = None
         raise GameOver("\""+ game['winner'] + "\"" + " wins!") 
-    # game over is board full
+    # or game over if is board full 
     elif _board_is_full(board):
         game['next_turn'] = None
         raise GameOver("Game is tied!")
