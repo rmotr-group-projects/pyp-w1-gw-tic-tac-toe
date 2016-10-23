@@ -72,15 +72,23 @@ def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    player1 = 'X'
-    player2 = 'O'
-    board = [
-    ["-", "-", "-"],
-    ["-", "-", "-"],
-    ["-", "-", "-"],
-    ]
-    return board
-
+    return {
+        'player1': player1,
+        'player2': player2,
+        'board': [
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+        ],
+        'next_turn': player1,
+        'winner': None
+    }
+ #oh really? okay i see
+ # :) yep i noticed that, okay i can do that, thanks alot :)))))
+ #it needs to look like: NO PROB! dont forget "X" == player1 ;)
+ #how do you mean?
+ #should work now
+     
 
 def get_winner(game):
     """
