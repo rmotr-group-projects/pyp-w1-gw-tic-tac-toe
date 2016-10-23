@@ -65,13 +65,21 @@ def _check_winning_combinations(board, player):
     """
     pass
 
+board = []
 
 # public interface
 def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    pass
+    player1 = 'X'
+    player2 = 'O'
+    board = [
+    ["-", "-", "-"],
+    ["-", "-", "-"],
+    ["-", "-", "-"],
+    ]
+    return board
 
 
 def get_winner(game):
