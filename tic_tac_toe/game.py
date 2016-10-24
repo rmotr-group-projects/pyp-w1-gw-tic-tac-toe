@@ -42,8 +42,8 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    for x in range(2):
-        for y in range(2):
+    for x in range(3):
+        for y in range(3):
             if(_position_is_empty_in_board((x,y), board)):
                 return False
     return True
@@ -128,18 +128,19 @@ def move(game, player, position):
     After registering the movement it must check if the game is over.
     """
     board = game['board']
+    #check if the game is over
+    if game['winner'] or _board_is_full(board):
+        print game['winner']
+        raise InvalidMovement("Game is over")
     #check to see if the right player is the one making the move    
     if player != game['next_turn']:
-        raise InvalidMovement("\""+ game['next_turn'] + "\"" +" moves next.")
+        raise InvalidMovement('"{}" moves next.'.format(game['next_turn']))
     #position is valid
     if not _position_is_valid(position):
-        raise InvalidMovement("Position out of range.")
+        raise InvalidMovement('Position out of range.')
     # position already taken
     if not _position_is_empty_in_board(position, board):
         raise InvalidMovement("Position already taken.")
-    # check if game has ended
-    if game['winner'] != None or _board_is_full(board):
-        raise GameOver("Game is over")
         
     # if tests are true, then move
     board[position[0]][position[1]] = player
@@ -148,7 +149,7 @@ def move(game, player, position):
     if _check_winning_combinations(board, player):
         game['winner'] = player
         game['next_turn'] = None
-        raise GameOver("\""+ game['winner'] + "\"" + " wins!") 
+        raise GameOver('"{}" wins!'.format(player)) 
     # or game over if is board full 
     elif _board_is_full(board):
         game['next_turn'] = None
@@ -169,10 +170,10 @@ def get_board_as_string(game):
     row_divider = "\n--------------\n"
     #iterate through each row
     for row in game['board']:
-        row_as_string = ' | '.join(row)
+        row_as_string = '  |  '.join(row)
         #add each row to the list of rows with newly formatted elements    
         rows_as_strings.append(row_as_string)
-    board_as_string = row_divider.join(rows_as_strings) 
+    board_as_string = "\n" + row_divider.join(rows_as_strings) + "\n"
     #return list of 3 formatted strings 
     return board_as_string 
 
