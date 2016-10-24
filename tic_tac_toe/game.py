@@ -130,7 +130,7 @@ def move(game, player, position):
     board = game['board']
     #check if the game is over
     if game['winner'] or _board_is_full(board):
-        print game['winner']
+        print(game['winner'])
         raise InvalidMovement("Game is over")
     #check to see if the right player is the one making the move    
     if player != game['next_turn']:
