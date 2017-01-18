@@ -1,5 +1,6 @@
 from tic_tac_toe.exceptions import *
 
+
 # internal helpers
 def _position_is_empty_in_board(position, board):
     """
@@ -11,7 +12,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    
+
     return True if board[position[0]][position[1]] is "-" else False
 
 
@@ -28,11 +29,11 @@ def _position_is_valid(position):
     Returns True if given position is valid, False otherwise.
     """
 
-    valid_positions = [
-        (0,0), (0,1), (0,2),
-        (1,0), (1,1), (1,2),
-        (2,0), (2,1), (2,2),
-    ]
+    valid_positions = (
+        (0, 0), (0, 1), (0, 2),
+        (1, 0), (1, 1), (1, 2),
+        (2, 0), (2, 1), (2, 2),
+    )
 
     return True if position in valid_positions else False
 
@@ -43,18 +44,17 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    
-    # Note to selfs: Lets make this pretty into a nested comprehension or something
-    
+
+    # Note: Lets make this pretty into a nested comprehension or something
     for row in board:
         for position in row:
-            if position == "-":
+            if position is "-":
                 return False
     else:
         return True
 
 
-def _is_winning_combination(board, combination, player): # Not in tests
+def _is_winning_combination(board, combination, player):  # Not in tests
     """
     Checks if all 3 positions in given combination are occupied by given player.
 
@@ -83,27 +83,27 @@ def _check_winning_combinations(board, player):
     """
 
     win_combs = (
-        ( (0,0), (0,1), (0,2) ),
-        ( (1,0), (1,1), (1,2) ),
-        ( (2,1), (2,1), (2,2) ),
-        ( (0,0),(1,0),(2,0) ),
-        ( (0,1),(1,1),(2,1) ),
-        ( (0,2),(1,2),(2,2) ),
-        ( (0,0),(1,1),(2,2) ),
-        ( (0,2),(1,1),(2,0) )
+        ((0, 0), (0, 1), (0, 2)),
+        ((1, 0), (1, 1), (1, 2)),
+        ((2, 1), (2, 1), (2, 2)),
+        ((0, 0), (1, 0), (2, 0)),
+        ((0, 1), (1, 1), (2, 1)),
+        ((0, 2), (1, 2), (2, 2)),
+        ((0, 0), (1, 1), (2, 2)),
+        ((0, 2), (1, 1), (2, 0))
     )
 
-    win = None
-    
-    for comb in win_combs: # Go through all combs
+    winner = None
+
+    for comb in win_combs:
         bingo = all([board[pos[0]][pos[1]] == player for pos in comb])
 
         if bingo:
-            win = player
+            winner = player
             break
-    
-    return win
-        
+
+    return winner
+
 
 # public interface
 def start_new_game(player1, player2):
@@ -136,70 +136,44 @@ def move(game, player, position):
     Performs a player movement in the game. Must ensure all the pre requisites
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
-    
-    1. check valid move > _position_is_valid(position)
-    2. check position available > _position_is_empty_in_board(position, board)
-    3. Change '-' to player in board
-    4. get next turn.
     """
 
-        
-    # print(game)
-    # print("Current: " + player)
-    # print("Next: " + get_next_turn(game))
-    
-    # if player is not game['next_turn']:
-    #      raise InvalidMovement('"O" moves next')
-    
-    # game['next_turn'] = get_next_turn(game)
-    
-    if _board_is_full(game['board']) or game['winner']:
-    # return None
+    if _board_is_full(game['board']) or get_winner(game):
         raise InvalidMovement('Game is over.')
-        
+
     if player is not game['next_turn']:
         raise InvalidMovement('"O" moves next')
 
-    # Is move valid?
     pos_valid = _position_is_valid(position)
     if not pos_valid:
         raise InvalidMovement("Position out of range.")
-      
-    # Is position taken?  
+
     pos_empty = _position_is_empty_in_board(position, game['board'])
     if not pos_empty:
         raise InvalidMovement("Position already taken.")
-    
-    # Change board position to X/O
+
     game['board'][position[0]][position[1]] = player
-    
-    # # Set next player to the other one
-    # game['next_player'] = game_next_turn(game)
-        
-    # Check of winning combinations
+
     if _check_winning_combinations(game['board'], player):
         game['winner'] = player
         raise GameOver('"{}" wins!'.format(player))
-        
-    # Check if board is full
+
     if _board_is_full(game['board']):
         raise GameOver('Game is tied!')
-    
-    # update next_turn
+
     if game['next_turn'] is game['player1']:
         game['next_turn'] = game['player2']
     else:
         game['next_turn'] = game['player1']
-       
 
 
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
+
     b = game['board']
-    
-    # try to use list function?
+
     board_string = """
 {}  |  {}  |  {}
 --------------
@@ -218,27 +192,6 @@ def get_board_as_string(game):
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
-        next turn:
-    4. is game over? > board_is_full(board), _check_winning_combinations(board, player), 
-    5. update next_turn 
     """
-    
-    # current_turn = game['next_turn']
-    
-    # if game['next_turn'] is game['player1']:
-    #     game['next_turn'] = game['player2']
-    # else:
-    #     game['next_turn'] = game['player1']
-    
-    # Raise error if board full or has winner
-    # if _board_is_full(game['board']) or game['winner']:
-    #     # return None
-    #     raise InvalidMovement('Game is over.')
-    
-    # if game['next_turn'] is game['player1']:
-    #     next_turn = game['player2']
-    # else:
-    #     next_turn = game['player1']
-    
+
     return game['next_turn']
-    
