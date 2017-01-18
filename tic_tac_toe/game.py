@@ -1,104 +1,165 @@
-# internal helpers
+from tic_tac_toe.exceptions import *
+#For AI
+from random import randint
+
 def _position_is_empty_in_board(position, board):
-    """
-    Checks if given position is empty ("-") in the board.
-
-    :param position: Two-elements tuple representing a
-                     position in the board. Example: (0, 1)
-    :param board: Game board.
-
-    Returns True if given position is empty, False otherwise.
-    """
-    pass
+    if board[position[0]][position[1]] == "-":
+        return True
+    else:
+        return False
 
 
 def _position_is_valid(position):
-    """
-    Checks if given position is a valid. To consider a position as valid, it
-    must be a two-elements tuple, containing values from 0 to 2.
-    Examples of valid positions: (0,0), (1,0)
-    Examples of invalid positions: (0,0,1), (9,8), False
-
-    :param position: Two-elements tuple representing a
-                     position in the board. Example: (0, 1)
-
-    Returns True if given position is valid, False otherwise.
-    """
-    pass
+    if not isinstance(position,tuple):
+        return False
+    if len(position) != 2:
+        return False
+    for p in position:
+        if p not in [0,1,2]:
+            return False
+    return True
+    
 
 
 def _board_is_full(board):
-    """
-    Returns True if all positions in given board are occupied.
-
-    :param board: Game board.
-    """
-    pass
-
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == '-':
+                return False
+    return True
+        
 
 def _is_winning_combination(board, combination, player):
-    """
-    Checks if all 3 positions in given combination are occupied by given player.
-
-    :param board: Game board.
-    :param combination: Tuple containing three position elements.
-                        Example: ((0,0), (0,1), (0,2))
-
-    Returns True of all three positions in the combination belongs to given
-    player, False otherwise.
-    """
-    pass
+    for position in combination:
+        if board[position[0]][position[1]] != player:
+            return False
+    return True
 
 
 def _check_winning_combinations(board, player):
-    """
-    There are 8 posible combinations (3 horizontals, 3, verticals and 2 diagonals)
-    to win the Tic-tac-toe game.
-    This helper loops through all these combinations and checks if any of them
-    belongs to the given player.
+    combinations = (
+                    ((0,0), (0,1), (0,2)),
+                    ((1,0), (1,1), (1,2)),
+                    ((2,0), (2,1), (2,2)),
+                    ((0,0), (1,0), (2,0)),
+                    ((0,1), (1,1), (2,1)),
+                    ((0,2), (1,2), (2,2)),
+                    ((0,0), (1,1), (2,2)),
+                    ((0,2), (1,1), (2,0))
+                    )
+    for combination in combinations:
+        if _is_winning_combination(board, combination,player):
+            return player
+            
+    return None
 
-    :param board: Game board.
-    :param player: One of the two playing players.
-
-    Returns the player (winner) of any of the winning combinations is completed
-    by given player, or None otherwise.
-    """
-    pass
 
 
 # public interface
-def start_new_game(player1, player2):
-    """
-    Creates and returns a new game configuration.
-    """
-    pass
+def start_new_game(player1, player2=None):
+    if player2 is None:
+        player2 = 'HAL'
+    new_board = {
+        'player1': player1,
+        'player2': player2,
+        'board': [
+            ["-","-","-"],
+            ["-","-","-"],
+            ["-","-","-"]
+        ],
+        'next_turn': player1,
+        'winner': None
+    }
+    
+    return new_board
 
 
 def get_winner(game):
-    """
-    Returns the winner player if any, or None otherwise.
-    """
-    pass
+    if _check_winning_combinations(game['board'],game['player1']):
+        return game['player1']
+    elif _check_winning_combinations(game['board'],game['player2']):
+        return game['player2']
+    return None
 
 
-def move(game, player, position):
-    """
-    Performs a player movement in the game. Must ensure all the pre requisites
-    checks before the actual movement is done.
-    After registering the movement it must check if the game is over.
-    """
-    pass
+def move(game, player, position = None):
+    if player == 'HAL':
+         position = robot_turn(game)
+    if game['winner']:
+        raise InvalidMovement('Game is over')
+    if player != game['next_turn']:
+        if _board_is_full(game['board']):
+            raise InvalidMovement('Game is over.')
+        else:
+            raise InvalidMovement("\"%s\" moves next." % (game['next_turn']))
+    if not _position_is_valid(position):
+        raise InvalidMovement('Position out of range.')
+    if not _position_is_empty_in_board(position, game['board']):
+        raise InvalidMovement('Position already taken.')
+
+
+    game['board'][position[0]][position[1]] = player 
+    winner = get_winner(game)
+    if winner:
+        game['winner'] = winner
+        raise GameOver('\"%s\" wins!' % (winner)) 
+        
+    if _board_is_full(game['board']):   
+        raise GameOver('Game is tied!')
+    else:
+        if game['next_turn'] == game['player1']:
+            game['next_turn'] = game['player2']
+        else:
+            game['next_turn'] = game['player1']
+            
+
+    
 
 
 def get_board_as_string(game):
-    """
-    Returns a string representation of the game board in the current state.
-    """
-    pass
+    board = game['board']
+    p1 = board[0][0]
+    p2 = board[0][1]
+    p3 = board[0][2]
+    p4 = board[1][0]
+    p5 = board[1][1]
+    p6 = board[1][2]
+    p7 = board[2][0]
+    p8 = board[2][1]
+    p9 = board[2][2]
 
+    row1 = "\n%s  |  %s  |  %s" % (p1,p2,p3)
+    row2 = "%s  |  %s  |  %s" % (p4,p5,p6)
+    row3 = "%s  |  %s  |  %s\n" % (p7,p8,p9)
+    divider = "\n--------------\n" 
+    game_board = row1 + divider + row2 + divider + row3
+    return game_board  
+    
 
 def get_next_turn(game):
-    """
-    Returns the player who plays next, or None if the game is already over.
-    """
-    pass
+    return game['next_turn']
+
+
+
+
+"""
+The following are for playing against an AI
+"""
+'''
+This was option 1.  We did not have a chance to finish it, but wanted to leave the idea.
+
+def AI_move(game):
+    while game['next_turn'] == 'HAL':
+        position = (randint(0,2),randint(0,2))
+        try:
+            move(game,'HAL',position)
+        except:
+            continue
+'''
+    
+def robot_turn(game):
+    position = (randint(0,2),randint(0,2))
+    while not _position_is_empty_in_board(position, game['board']):
+        position = (randint(0,2),randint(0,2))
+    return position
+
