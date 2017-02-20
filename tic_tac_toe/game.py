@@ -1,5 +1,5 @@
 # internal helpers
-#from exceptions import *
+from .exceptions import InvalidMovement, GameOver
 from random import choice
 def _position_is_empty_in_board(position, board):
     """
