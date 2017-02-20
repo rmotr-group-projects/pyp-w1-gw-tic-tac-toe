@@ -1,5 +1,6 @@
 # internal helpers
 from exceptions import *
+from random import choice
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -111,11 +112,11 @@ def _check_winning_combinations(board, player):
 
 
 # public interface
-def start_new_game(player1, player2):
+def start_new_game(player1, player2, ai=False):
     """
     Creates and returns a new game configuration.
     """
-    return {
+    game = {
         'player1': player1,
         'player2': player2,
         'board': [
@@ -126,6 +127,10 @@ def start_new_game(player1, player2):
         'next_turn': player1,
         'winner': None
     }
+    
+    if ai == True:
+        game['player2'] == wintermute(game)
+    return game
 
 
 def get_winner(game):
@@ -183,3 +188,12 @@ def get_next_turn(game):
     Returns the player who plays next, or None if the game is already over.
     """
     return game['next_turn']
+
+def wintermute(game):
+    """lazy random "ai" """
+    r_num = [0,1,2]
+    ai_choice = (choice(r_num),choice(r_num))
+    while _position_is_empty_in_board(ai_choice, game['board']) != True:
+        ai_choice = (choice(r_num),choice(r_num))
+    return ai_choice
+    
