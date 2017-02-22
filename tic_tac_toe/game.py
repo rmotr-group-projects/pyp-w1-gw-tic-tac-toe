@@ -1,4 +1,4 @@
-from exceptions import InvalidMovement, GameOver
+from tic_tac_toe.exceptions import GameOver,InvalidMovement
 
 # internal helpers
 def _position_is_empty_in_board(position, board):
