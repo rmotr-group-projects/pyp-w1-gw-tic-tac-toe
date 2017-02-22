@@ -1,4 +1,4 @@
-from exceptions import *
+from .exceptions import InvalidMovement, GameOver
 
 # internal helpers
 def _position_is_empty_in_board(position, board):
