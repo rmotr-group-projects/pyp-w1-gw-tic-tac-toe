@@ -1,4 +1,4 @@
-from exceptions.py import *
+from exceptions import *
 
 # internal helpers
 def _position_is_empty_in_board(position, board):
