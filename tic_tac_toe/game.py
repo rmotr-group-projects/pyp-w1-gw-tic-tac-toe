@@ -1,4 +1,4 @@
-#from exceptions import *
+from exceptions.py import *
 
 # internal helpers
 def _position_is_empty_in_board(position, board):
@@ -183,14 +183,7 @@ def get_board_as_string(game):
     return board_string
     
 
-    """
-    get_board_as_string(game)
-     X |  O  |  X
-    --------------
-    O  |  O  |  X
-    --------------
-    X  |  -  |  -
-    """
+    
 
 def get_next_turn(game):
     """
