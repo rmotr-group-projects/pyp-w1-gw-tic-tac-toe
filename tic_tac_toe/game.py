@@ -14,9 +14,7 @@ def _position_is_empty_in_board(position, board):
 
     if board[position[0]][position[1]] == '-':
         return True
-    return False
 
-    
 def _position_is_valid(position):
     """
     Checks if given position is a valid. To consider a position as valid, it
@@ -29,12 +27,11 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    valid = [
-            (0,0), (0,1), (0,2),
-            (1,0), (1,1), (1,2),
-            (2,0), (2,1), (2,2),
-            ] 
-    return position in valid
+    valid = range(3)
+    if not isinstance(position, tuple) or len(position) > 2:
+        return False
+    if position[0] in valid and position[1] in valid:
+        return True
 
     
 def _board_is_full(board):
