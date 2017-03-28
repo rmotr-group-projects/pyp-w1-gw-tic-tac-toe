@@ -1,4 +1,6 @@
 # internal helpers
+from .exceptions import InvalidMovement, GameOver
+from random import choice
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -9,8 +11,9 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    pass
 
+    if board[position[0]][position[1]] == '-':
+        return True
 
 def _position_is_valid(position):
     """
@@ -24,17 +27,24 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    pass
+    valid = range(3)
+    if not isinstance(position, tuple) or len(position) > 2:
+        return False
+    if position[0] in valid and position[1] in valid:
+        return True
 
-
+    
 def _board_is_full(board):
     """
     Returns True if all positions in given board are occupied.
 
     :param board: Game board.
     """
-    pass
-
+    for pos in board:
+        if '-' in pos:
+            return False
+    return True
+    
 
 def _is_winning_combination(board, combination, player):
     """
@@ -47,7 +57,10 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    pass
+    for pos in combination:
+        if pos != player:
+            return False
+    return True
 
 
 def _check_winning_combinations(board, player):
@@ -63,22 +76,65 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    pass
+    def horizontals():
+        return [row for row in board]
+    
+    def verticals():
+        col = 0
+        vert = []
+        while col != 3:
+            for row in board:
+                vert.extend([row[col]]) 
+            col += 1
+        return [vert[x:x+3] for x in range(0, len(vert),3)]
+    
+    def diagonals():
+      num = 0
+      diag = []
+      for row in board:
+          diag.extend(row[num])
+          num += 1
+      num = 2
+      for row in board:
+          diag.extend(row[num])
+          num -= 1
+      return [diag[x:x+3] for x in range(0, len(diag),3)]
+          
+    combinations = horizontals() + verticals() + diagonals()
+
+    for combination in combinations:
+        if _is_winning_combination(board, combination,player):
+            return player
+    return None
 
 
 # public interface
-def start_new_game(player1, player2):
+def start_new_game(player1, player2, ai=False):
     """
     Creates and returns a new game configuration.
     """
-    pass
+    game = {
+        'player1': player1,
+        'player2': player2,
+        'board': [
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+            ],
+        'next_turn': player1,
+        'winner': None
+    }
+    
+    if ai == True:
+        game['player2'] == wintermute(game)
+    return game
 
 
 def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
     """
-    pass
+    return game['winner']
 
 
 def move(game, player, position):
@@ -87,18 +143,54 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    pass
-
+    
+    if get_next_turn(game) != player:
+        raise InvalidMovement('"{}" moves next'.format(get_next_turn(game)))
+        
+    if game['winner'] or _board_is_full(game['board']):
+        raise InvalidMovement("Game is over.")
+    
+    if _position_is_valid(position):
+        if not _position_is_empty_in_board(position,game['board']):
+            raise InvalidMovement("Position already taken.")
+        game['board'][position[0]][position[1]] = player
+        game['next_turn'] = (game['player1'] if player == game['player2'] 
+                            else game['player2'])  
+    else:
+        raise InvalidMovement("Position out of range.")
+    
+    if _check_winning_combinations(game['board'], player):
+        game['winner'] = player
+        raise GameOver('"{}" wins!'.format(player))
+    
+    if _board_is_full(game['board']):
+        raise GameOver("Game is tied!")
+        
 
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    pass
+    return '''
+{}  |  {}  |  {}
+--------------
+{}  |  {}  |  {}
+--------------
+{}  |  {}  |  {}
+'''.format(*[y for x in game['board'] for y in x])
 
 
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    pass
+    return game['next_turn']
+
+def wintermute(game):
+    """lazy random "ai" """
+    r_num = [0,1,2]
+    ai_choice = (choice(r_num),choice(r_num))
+    while _position_is_empty_in_board(ai_choice, game['board']) != True:
+        ai_choice = (choice(r_num),choice(r_num))
+    return ai_choice
+    
