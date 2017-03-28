@@ -11,7 +11,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    
+    import ipdb
     if board[position[0]][position[1]] == "-":
         return True
     else:

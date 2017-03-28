@@ -1,0 +1,14 @@
+
+
+[0;32m### Running tests ### [0m
+
+PYTHONPATH=. py.test tests
+============================= test session starts ==============================
+platform linux -- Python 3.4.3, pytest-2.9.2, py-1.4.31, pluggy-0.3.1
+rootdir: /home/ubuntu/workspace, inifile: 
+plugins: cov-2.2.1
+collected 17 items
+
+tests/test_main.py .................
+
+========================== 17 passed in 0.09 seconds ===========================
