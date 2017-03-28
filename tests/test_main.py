@@ -207,7 +207,7 @@ class TestTicTacToe(unittest.TestCase):
             move(self.game, self.x, position=(2, 1))
         self.assertEqual(get_winner(self.game), None)
         self.assertTrue(_board_is_full(self.game['board']))
-        with self.assertRaisesRegexp(InvalidMovement, 'Game is over.'):
+        with self.assertRaisesRegexp(InvalidMovement, 'Game is over'):
             move(self.game, self.o, position=(0, 0))
 
     def test_play_X_wins(self):
