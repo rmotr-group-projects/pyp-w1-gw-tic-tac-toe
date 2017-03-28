@@ -6,6 +6,7 @@ from tic_tac_toe import (
     get_next_turn, _position_is_valid, _position_is_empty_in_board,
     _board_is_full, _check_winning_combinations, _board_is_full,
     InvalidMovement, GameOver)
+from tic_tac_toe.game import robot_turn
 
 
 class TestTicTacToe(unittest.TestCase):
@@ -278,3 +279,33 @@ O  |  X  |  O
         self.assertEqual(get_next_turn(self.game), self.x)
         move(self.game, self.x, position=(0, 0))
         self.assertEqual(get_next_turn(self.game), self.o)
+
+
+class TestTicTacRobot(unittest.TestCase):
+    
+    def setUp(self):
+        self.x = "X"
+        self.game = start_new_game(self.x)
+
+    def test_start_new_game(self):
+        game = start_new_game(self.x)
+        expected = {
+            'player1': self.x,
+            'player2': 'HAL',
+            'board': [
+                ["-", "-", "-"],
+                ["-", "-", "-"],
+                ["-", "-", "-"],
+            ],
+            'next_turn': self.x,
+            'winner': None
+        }
+        self.assertEqual(game, expected)
+        
+    def test_robot_finds_empty_cell(self):
+        self.game['board'] = [
+            ["HAL", "HAL", "X"],
+            ["HAL", "X", "X"],
+            ["HAL", "X", "-"],
+        ]
+        self.assertEqual(robot_turn(self.game), (2,2))
