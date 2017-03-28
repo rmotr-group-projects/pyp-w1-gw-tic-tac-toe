@@ -7,7 +7,7 @@ from tic_tac_toe import (
     _board_is_full, _check_winning_combinations, _board_is_full,
     InvalidMovement, GameOver)
 
-
+# PYTHONPATH= py.test tests/test_main.py::TestTicTacToe::**test**
 class TestTicTacToe(unittest.TestCase):
 
     def setUp(self):
