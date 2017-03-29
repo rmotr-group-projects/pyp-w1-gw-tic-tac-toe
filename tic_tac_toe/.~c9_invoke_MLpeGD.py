@@ -1,4 +1,3 @@
-from .exceptions import GameOver, InvalidMovement
 # internal helpers
 def _position_is_empty_in_board(position, board):
     """
@@ -26,15 +25,15 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    if not isinstance(position,tuple):
+    valid = [(0,0), (0,1), (0,2),
+            (1,0), (1,1), (1,2),
+            (2,0), (2,1), (2,2),
+        ]
+        
+    if position in valid:
+        return True
+    else:
         return False
-    if len(position) != 2:
-        return False
-    if position[0] not in (0, 1, 2):
-        return False
-    if position[1] not in (0, 1, 2):
-        return False
-    return True
 
 
 def _board_is_full(board):
@@ -45,12 +44,15 @@ def _board_is_full(board):
     """
     
     for x in range(3):
-        for y in range(3):
-            if board[x][y] == '-':
-                return False
-        
-    return True
-    
+        if '-' in board[x]:
+            return False
+        else:
+            return True
+    for y in range(3):
+        if '-' in board[y]:
+            return False
+        else:
+            return True
 
 
 def _is_winning_combination(board, combination, player):
@@ -64,11 +66,26 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    for position in combination:
-        if board[position[0]][position[1]] != player:
-            return False
-    return True
+    combinations = (
+        # horizontals
+        ((0,0), (0,1), (0,2)),
+        ((1,0), (1,1), (1,2)),
+        ((2,0), (2,1), (2,2)),
 
+        # verticals
+        ((0,0), (1,0), (2,0)),
+        ((0,1), (1,1), (2,1)),
+        ((0,2), (1,2), (2,2)),
+
+        # diagonals
+        ((0,0), (1,1), (2,2)),
+        ((2,0), (1,1), (0,2)),
+    )
+    
+    for combination in combinations:
+        if _is_winning_combination(board, combination, player):
+            return player
+    return None
 
 
 def _check_winning_combinations(board, player):
@@ -99,7 +116,7 @@ def _check_winning_combinations(board, player):
         ((0,0), (1,1), (2,2)),
         ((2,0), (1,1), (0,2)),
         )
-    for combination in combinations:
+    for i in comb
         if _is_winning_combination(board, combination, player):
             return player
     return None
@@ -137,17 +154,25 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    board = game['board']
+    if get_winner(game):
+        raise InvalidMovement("Game is over.")
     if game['winner'] or _board_is_full(board):
         raise InvalidMovement('Game is over.')
-    if player != game['next_turn']:
+    if player != get_next_turn(game):
         raise InvalidMovement('"{}" moves next.'.format(game['next_turn']))
     if not _position_is_valid(position):
         raise InvalidMovement('Position out of range.')
     if not _position_is_empty_in_board(position, board):
         raise InvalidMovement('Position already taken.')
+   
     board[position[0]][position[1]] = player
+    if player == 'X':
+        game['next_turn'] == 'O'
+    else:
+        game['next_turn'] == 'X'
+    
     winner = _check_winning_combinations(board, player)
+    
     if winner:
         game['winner'] = winner
         game['next_turn'] = None
@@ -160,18 +185,17 @@ def move(game, player, position):
 
 
 
-
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
     string_board = """
-{0}  |  {1}  |  {2}
---------------
-{3}  |  {4}  |  {5}
---------------
-{6}  |  {7}  |  {8}
-"""
+    {0} | {1} | {2}
+    --------------
+    {3} | {4} | {5}
+    --------------
+    {6} | {7} | {8}
+    """
     board = game['board']
     return string_board.format(*(board[0] + board[1] + board[2]))
     
@@ -181,4 +205,4 @@ def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    return game['next_turn']
+    
