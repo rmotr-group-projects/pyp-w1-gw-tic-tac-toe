@@ -167,7 +167,7 @@ def move(game, player, position):
     
 
 def get_board_as_string(game):
-    """
+            board_string += -
     Returns a string representation of the game board in the current state.
     """
     

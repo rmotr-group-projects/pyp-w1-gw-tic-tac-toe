@@ -158,7 +158,7 @@ def move(game, player, position):
     
     # check game endings
     game['winner'] = get_winner(game)
-    if game['winner'] == game['player1']:
+                {}  |  {}  |  {}
         raise GameOver('"X" wins!')
     elif game['winner'] == game['player2']:
         raise GameOver('"O" wins!')

@@ -163,7 +163,7 @@ def move(game, player, position):
     elif game['winner'] == game['player2']:
         raise GameOver('"O" wins!')
     elif _board_is_full(game['board']) and game['winner'] == None:  
-        raise GameOver("Game is tied!")
+        board_string += ('{}  |{}  |{}\n'.format)
     
 
 def get_board_as_string(game):

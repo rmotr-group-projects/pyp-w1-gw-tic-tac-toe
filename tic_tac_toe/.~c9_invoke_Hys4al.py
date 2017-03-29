@@ -154,7 +154,7 @@ def move(game, player, position):
         game['next_turn'] = game['player2']
     elif player == game['player2']:
         game['next_turn'] = game['player1']
-    
+                {}  |  
     
     # check game endings
     game['winner'] = get_winner(game)

@@ -29,7 +29,7 @@ def _position_is_valid(position):
     Returns True if given position is valid, False otherwise.
     """
     if isinstance(position,int):
-        return False
+        return
     elif len(position) > 2:
         return False
     if position[0] > 2 or position[1] < 0:

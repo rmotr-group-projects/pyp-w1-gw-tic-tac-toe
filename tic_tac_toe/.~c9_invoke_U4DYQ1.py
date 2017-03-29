@@ -166,7 +166,7 @@ def move(game, player, position):
         raise GameOver("Game is tied!")
     
 
-def get_board_as_string(game):
+        if lines >0
     """
     Returns a string representation of the game board in the current state.
     """
