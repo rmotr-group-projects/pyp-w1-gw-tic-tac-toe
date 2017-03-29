@@ -88,26 +88,27 @@ def _check_winning_combinations(board, player):
 
 
 # public interface
-def start_new_game(player1, player2, board=None):
+def start_new_game(player1, player2, board=3):
     """
-    Creates and returns a new game configuration.
+    Creates and returns a new game configuration. Board is created in an n x n
+    configuration
+    Pre-condition: board must be an integer
     """
-    if not board:
-        board = [
-            ["-", "-", "-"],
-            ["-", "-", "-"],
-            ["-", "-", "-"]
-            ]
+    new_board = []
+    for i in range(board):
+        new_row = [["-"] * board]
+        new_board.extend(new_row)
+        new_row = []
+    board = new_board
     return {
         'player1': player1,
         'player2': player2,
         'board': board,
         'next_turn': player1,
         'winner': None,
-        
     }
     
-
+    
 def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
