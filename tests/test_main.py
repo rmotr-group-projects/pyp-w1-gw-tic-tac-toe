@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
+from tic_tac_toe.exceptions import *
 
 from tic_tac_toe import (
     start_new_game, get_board_as_string, move, get_winner,
