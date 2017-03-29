@@ -1,7 +1,6 @@
+import pdb
 # internal helpers
-import exceptions
-from exceptions import InvalidMovement
-from exceptions import GameOver
+from .exceptions import InvalidMovement, GameOver
 # virtual-env: 'extensible-ttt'
 def _position_is_empty_in_board(position, board):
     """
@@ -63,7 +62,7 @@ def _is_winning_combination(board, combination, player):
     char_list = []
     for position in combination:
         char_list.append(board[position[0]][position[1]])
-    if len(set(char_list)) > 1 or list(set(char_list))[0] != player:
+    if len(set(char_list)) > 1 or player not in set(char_list):
         return False
     return True
     
@@ -82,12 +81,14 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
+    # pdb.set_trace()
     _in_a_row_to_win = len(board[0])
     vertical_combos = []
     diagonal_combos_1 = []
     diagonal_combos_2 = []
     list_index = 0
-    flat_win_check = board
+    flat_win_check = []
+    flat_win_check += board
 
     for i in range(_in_a_row_to_win):
         vert_list = []
@@ -95,10 +96,12 @@ def _check_winning_combinations(board, player):
             vert_list.append(_list[i])
         vertical_combos.append(vert_list)
     flat_win_check += vertical_combos
+    
     for i in range(_in_a_row_to_win):
         diagonal_combos_1 += [board[i][i]]
     #return diagonal_combos_1
     flat_win_check += [diagonal_combos_1]
+    
     for i in reversed(range(_in_a_row_to_win)):
         diagonal_combos_2 += [board[list_index][i]]
         list_index += 1
@@ -140,7 +143,7 @@ def get_winner(game):
 
 
 def move(game, player, position):
-    
+    # pdb.set_trace()
     if game['winner'] or _board_is_full(game['board']):
         raise InvalidMovement('Game is over.')
     
@@ -159,15 +162,21 @@ def move(game, player, position):
     
     winner = _check_winning_combinations(game['board'], player)
     
-    
+    # pdb.set_trace()
+#check winner combination and update if there is a winner
     if winner:
-        game['winner'] = winner
+        game['winner'] = player
         game['next_turn'] = None
-        raise GameOver('"{}" wins!'.format(winner))
-        
+        raise GameOver('"{}" wins!'.format(player))
+
+     #no winner game is tied if board full
     if _board_is_full(game['board']):
         game['next_turn'] = None
-        raise GameOver("Game is tied!".format(winner))
+        raise GameOver('Game is tied!')
+ 
+    player1 = game['player1']
+    player2 = game['player2']
+    game['next_turn'] = player1 if player == player2 else player2
    
     
         
@@ -180,13 +189,9 @@ def get_board_as_string(game):
     Returns a string representation of the game board in the current state.
     """
 #standard board config, must be created anew for any customizable board-making functions (variable columns, rows, etc)    
-    str_board = """
-{}  |  {}  |  {}
---------------
-{}  |  {}  |  {}
---------------
-{}  |  {}  |  {}
-"""
+    str_board = "\n{}  |  {}  |  {}\n--------------\n{}  |  {}  |  {}\n--------------\n{}  |  {}  |  {}\n"
+
+
     flattened_board = []
 
     for list in game['board']:
