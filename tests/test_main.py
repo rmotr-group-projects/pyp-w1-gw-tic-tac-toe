@@ -37,14 +37,14 @@ class TestTicTacToe(unittest.TestCase):
             (2,0), (2,1), (2,2),
         ]
         for position in valid_positions:
-            self.assertTrue(_position_is_valid(position))
+            self.assertTrue(_position_is_valid(self.game, position))
 
     def test_is_valid_position_invalid(self):
         invalid_positions = [
             (2,3), (3,2), (3,3), (9,9), (-1,-1), 1, "something", False, (0,0,0)
         ]
         for position in invalid_positions:
-            self.assertFalse(_position_is_valid(position))
+            self.assertFalse(_position_is_valid(self.game, position))
 
     def test_is_empty_position(self):
         board = self.game['board']
