@@ -1,4 +1,4 @@
-from exceptions import *
+from .exceptions import *
 from itertools import chain
 
 # internal helpers
