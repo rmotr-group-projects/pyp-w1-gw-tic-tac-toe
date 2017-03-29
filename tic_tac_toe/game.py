@@ -1,4 +1,5 @@
-# internal helpers
+from tic_tac_toe.exceptions import GameOver, InvalidMovement
+
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -9,7 +10,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    pass
+    return board[position[0]][position[1]] == '-'
 
 
 def _position_is_valid(position):
@@ -24,7 +25,11 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    pass
+    try:
+        return (len(position) == 2 
+                and all(isinstance(n, int) and -1 < n < 3 for n in position))
+    except TypeError:
+        return False
 
 
 def _board_is_full(board):
@@ -33,10 +38,13 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    pass
+    for position in board:
+        if "-" in position:
+            return False
+    return True
 
 
-def _is_winning_combination(board, combination, player):
+def _is_winning_combination(combination, player):
     """
     Checks if all 3 positions in given combination are occupied by given player.
 
@@ -47,8 +55,10 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    pass
-
+    if all(mark if mark == player else False for mark in combination):
+        return True
+    return False
+    
 
 def _check_winning_combinations(board, player):
     """
@@ -63,22 +73,45 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    pass
+    for i in range(len(board)):
+        if _is_winning_combination(board[i], player):
+            return player
+        elif _is_winning_combination([col[i] for col in board], player):
+            return player
+    if (_is_winning_combination(
+        [board[i][i] for i in range(len(board))], player)
+        or _is_winning_combination(
+        [board[j][i] 
+        for i,j in enumerate(range(len(board)-1,-1,-1))], player)):
+            return player
 
 
 # public interface
-def start_new_game(player1, player2):
+def start_new_game(player1, player2, board=None):
     """
     Creates and returns a new game configuration.
     """
-    pass
-
+    if not board:
+        board = [
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+            ["-", "-", "-"]
+            ]
+    return {
+        'player1': player1,
+        'player2': player2,
+        'board': board,
+        'next_turn': player1,
+        'winner': None,
+        
+    }
+    
 
 def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
     """
-    pass
+    return game['winner']
 
 
 def move(game, player, position):
@@ -87,18 +120,46 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    pass
+    board = game['board']
+    
+    if _board_is_full(board) or game['winner']:
+        raise InvalidMovement("Game is over.")
+    elif player != game['next_turn']:
+        raise InvalidMovement('"{}" moves next'.format(game['next_turn']))
+    elif not _position_is_valid(position):
+        raise InvalidMovement('Position out of range.')
+    elif not _position_is_empty_in_board(position, board):
+        raise InvalidMovement('Position already taken.')
+    else:
+        board[position[0]][position[1]] = player
+        if _check_winning_combinations(board, player):
+            game['winner'] = player
+            raise GameOver('"{}" wins!'.format(player))
+        elif _board_is_full(board):
+            raise GameOver("Game is tied!")
+        elif game['next_turn'] == game['player1']:
+            game['next_turn'] = game['player2']
+        else:
+            game['next_turn'] = game['player1']
+    
 
 
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    pass
-
+    board = game['board']
+    board_str = ''
+    for i in range(len(board)):
+        board_str += ('\n' + ('{}  |  ' * (len(board)-1) + '{}') + '\n')
+        if i < len(board)-1:
+            board_str += '--------------'
+    return board_str.format(*([board[i][j]
+                              for i in range(len(board))
+                              for j in range(len(board))]))
 
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    pass
+    return game['next_turn']
