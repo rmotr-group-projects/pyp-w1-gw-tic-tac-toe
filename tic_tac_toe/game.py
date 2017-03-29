@@ -1,4 +1,5 @@
 from tic_tac_toe.exceptions import GameOver, InvalidMovement
+from itertools import chain
 
 def _position_is_empty_in_board(position, board):
     """
@@ -13,7 +14,7 @@ def _position_is_empty_in_board(position, board):
     return board[position[0]][position[1]] == '-'
 
 
-def _position_is_valid(position):
+def _position_is_valid(game, position):
     """
     Checks if given position is a valid. To consider a position as valid, it
     must be a two-elements tuple, containing values from 0 to 2.
@@ -26,9 +27,9 @@ def _position_is_valid(position):
     Returns True if given position is valid, False otherwise.
     """
     try:
-        return (all(len(position) == 2 
+        return (all(len(position) == 2
                    and isinstance(n, int) 
-                   and -1 < n < 3 for n in position))
+                   and -1 < n < len(game['board']) for n in position))
     except TypeError:
         return False
 
@@ -126,7 +127,7 @@ def move(game, player, position):
         raise InvalidMovement("Game is over.")
     elif player != game['next_turn']:
         raise InvalidMovement('"{}" moves next'.format(game['next_turn']))
-    elif not _position_is_valid(position):
+    elif not _position_is_valid(game, position):
         raise InvalidMovement('Position out of range.')
     elif not _position_is_empty_in_board(position, board):
         raise InvalidMovement('Position already taken.')
@@ -153,10 +154,12 @@ def get_board_as_string(game):
     for i in range(len(board)):
         board_str += ('\n' + ('{}  |  ' * (len(board)-1) + '{}') + '\n')
         if i < len(board)-1:
-            board_str += '--------------'
-    return board_str.format(*([board[i][j]
-                              for i in range(len(board))
-                              for j in range(len(board))]))
+            board_str += ('--------------' + ('-'*6*(len(board)-3)))
+    return board_str.format(*chain.from_iterable(board))
+            
+    #return board_str.format(*([board[i][j]
+    #                          for i in range(len(board))
+    #                          for j in range(len(board))]))
 
 def get_next_turn(game):
     """
