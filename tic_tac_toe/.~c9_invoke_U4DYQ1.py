@@ -1,4 +1,4 @@
-from .exceptions import *
+from exceptions import *
 # internal helpers
 def _position_is_empty_in_board(position, board):
     """
@@ -166,7 +166,7 @@ def move(game, player, position):
         raise GameOver("Game is tied!")
     
 
-def get_board_as_string(game):
+        if lines >0
     """
     Returns a string representation of the game board in the current state.
     """

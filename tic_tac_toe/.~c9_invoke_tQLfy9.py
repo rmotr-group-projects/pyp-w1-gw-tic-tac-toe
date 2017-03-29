@@ -1,4 +1,4 @@
-from .exceptions import *
+from exceptions import *
 # internal helpers
 def _position_is_empty_in_board(position, board):
     """
@@ -28,7 +28,7 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    if isinstance(position,int):
+    if isinstance 
         return False
     elif len(position) > 2:
         return False
