@@ -26,8 +26,9 @@ def _position_is_valid(position):
     Returns True if given position is valid, False otherwise.
     """
     try:
-        return (len(position) == 2 
-                and all(isinstance(n, int) and -1 < n < 3 for n in position))
+        return (all(len(position) == 2 
+                   and isinstance(n, int) 
+                   and -1 < n < 3 for n in position))
     except TypeError:
         return False
 
@@ -81,8 +82,7 @@ def _check_winning_combinations(board, player):
     if (_is_winning_combination(
         [board[i][i] for i in range(len(board))], player)
         or _is_winning_combination(
-        [board[j][i] 
-        for i,j in enumerate(range(len(board)-1,-1,-1))], player)):
+        [board[i][j] for i,j in enumerate(range(len(board)-1,-1,-1))], player)):
             return player
 
 
