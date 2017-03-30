@@ -4,8 +4,8 @@ import unittest
 from tic_tac_toe import (
     start_new_game, get_board_as_string, move, get_winner,
     get_next_turn, _position_is_valid, _position_is_empty_in_board,
-    _board_is_full, _check_winning_combinations, _board_is_full,
-    InvalidMovement, GameOver)
+    _board_is_full, _is_winning_combination, _check_winning_combinations,
+    _board_is_full, InvalidMovement, GameOver)
 
 
 class TestTicTacToe(unittest.TestCase):
@@ -74,6 +74,24 @@ class TestTicTacToe(unittest.TestCase):
             ["O", "X", "O"],
         ]
         self.assertFalse(_board_is_full(self.game['board']))
+
+    def test_is_winning_combination(self):
+        board = [
+            ["X", "X", "X"],
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+        ]
+        combo = ((0,0), (0,1), (0,2))
+        self.assertTrue(_is_winning_combination(board, combo, 'X'))
+
+    def test_is_winning_combination_false(self):
+        board = [
+            ["X", "O", "X"],
+            ["-", "-", "-"],
+            ["-", "-", "-"],
+        ]
+        combo = ((0,0), (0,1), (0,2))
+        self.assertFalse(_is_winning_combination(board, combo, 'X'))
 
     def test_check_win_no_winner(self):
         board = [
