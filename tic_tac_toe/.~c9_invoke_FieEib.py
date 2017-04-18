@@ -30,8 +30,7 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    #print(position)
-    if not isinstance(position,tuple): return False
+    print(position)
     
     if len(position) != 2:
         return False
@@ -166,28 +165,19 @@ def get_winner(game):
     
 
 def move(game, player, position):
-    
     """
     Performs a player movement in the game. Must ensure all the pre requisites
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    
-    winner = get_winner(game)
     board = game['board']
     next_player = get_next_turn(game)
-    
-    if not _position_is_valid(position):
+    if _position_is_valid(position) != True:
         raise InvalidMovement("Position out of range.")
-    elif winner or _board_is_full(board): raise InvalidMovement("Game is over.")
-    #elif _board_is_full(board): raise InvalidMovement("Game is over.")
-    #    raise GameOver("Game is over.")
-    #    return
-    elif not _position_is_empty_in_board(position, board):
+    elif _position_is_empty_in_board(position, board) != True:
         raise InvalidMovement("Position already taken.")
     elif player != next_player:
-        #raise InvalidMovement((next_player, " moves next"))
-        raise InvalidMovement('"{}" moves next'.format(next_player))
+        raise InvalidMovement((next_player, " moves next"))
     else:
         x = position[0]
         y = position[1]
@@ -198,13 +188,13 @@ def move(game, player, position):
         game['next_turn'] = "X"
     game['winner'] = _check_winning_combinations(board, player)
     winner = get_winner(game)
-    if winner:
-        raise GameOver('"{}" wins!'.format(winner))
+    if winner != None:
+        raise GameOver(winner + " wins!")
     if _board_is_full(board) == True:
         raise GameOver("Game is tied!")
     
 
-   #raise  GameOver((player, " wins!"))     
+   # raise  GameOver((player, " wins!"))     
 
 
 def get_board_as_string(game):
