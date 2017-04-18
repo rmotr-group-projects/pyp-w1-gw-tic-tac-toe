@@ -6,6 +6,10 @@ END=" \#\#\# \033[0m\n"
 test:
 	@echo $(TAG)Running tests$(END)
 	PYTHONPATH=. py.test tests
+	PYTHONPATH=. py.test tests/test_main.py::TestTicTacToe::test_play_position_already_taken
+	#PYTHONPATH=. py.test tests/test_main.py::TestTicTacToe::test_play_one_player_moves_twice
+	#PYTHONPATH=. py.test tests/test_main.py::TestTicTacToe::test_play_position_already_taken
+	
 
 test-cov:
 	@echo $(TAG)Running tests with coverage$(END)
