@@ -1,6 +1,7 @@
 class InvalidMovement(Exception):
-    pass
+    pass 
 
 
 class GameOver(Exception):
     pass
+   
