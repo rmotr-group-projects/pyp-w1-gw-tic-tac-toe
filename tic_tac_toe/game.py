@@ -1,4 +1,86 @@
-# internal helpers
+from exceptions import *
+
+# Public functions (game starter, basic checks, make a move and such).
+def start_new_game(player1, player2):
+    """
+    Creates and returns a new game configuration.
+    """
+    
+    game = {
+    'player1': "X",
+    'player2': "O",
+    'board': [
+        ["-", "-", "-"],
+        ["-", "-", "-"],
+        ["-", "-", "-"],
+    ],
+    'next_turn': "X",
+    'winner': None
+    }
+    
+    return game
+    
+def get_board_as_string(game):
+    """
+    Returns a string representation of the game board in the current state.
+    """
+    
+    board_string = """
+{}  |  {}  |  {}
+--------------
+{}  |  {}  |  {}
+--------------
+{}  |  {}  |  {}
+"""
+    
+    return board_string.format(*([elem for row in game['board'] for elem in row]))
+
+def get_winner(game):
+    """
+    Returns the winner player if any, or None otherwise.
+    """
+    
+    return game['winner']
+
+def move(game, player, position):
+    board = game['board']
+
+    #illegal moves section
+    if game['winner'] or _board_is_full(board):
+        raise InvalidMovement('Game is over.')
+    
+    if player != get_next_turn(game):
+        raise InvalidMovement('"{}" moves next.'.format(game['next_turn']))
+    
+    if not _position_is_valid(position):
+        raise InvalidMovement('Position out of range.')
+    
+    if not _position_is_empty_in_board(position, board):
+        raise InvalidMovement('Position already taken.')
+    
+    # make move section
+    board[position[0]][position[1]] = player  #using indices in tuple on the board positions
+  
+    winner = _check_winning_combinations(board, player)    # winner?; returns None if none
+    
+    if winner:    #record results section
+        game['winner'] = winner
+        game['next_turn'] = None
+        raise GameOver('"{}" wins!'.format(winner))
+    elif _board_is_full(board):    # board is full AND no winner...
+        game['next_turn'] = None
+        raise GameOver('Game is tied!')
+    else:                                   #else, continue with the game marking the next turn
+        game['next_turn'] = (game['player1'] if game['next_turn'] == game['player2'] 
+                            else game['player2'])
+
+def get_next_turn(game):
+    """
+    Returns the player who plays next, or None if the game is already over.
+    """
+    return game['next_turn']
+    
+# Helpers / Verifications
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -9,7 +91,7 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    pass
+    return True if board[position[0]][position[1]] == "-" else False
 
 
 def _position_is_valid(position):
@@ -24,7 +106,10 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    pass
+    if isinstance(position, tuple) and len(position) == 2:
+        if len( filter (lambda x: 0 <= x <= 2, position)) == len(position):
+            return True
+    return False
 
 
 def _board_is_full(board):
@@ -33,7 +118,8 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    pass
+
+    return all([False if cell == "-" else True for row in board for cell in row])
 
 
 def _is_winning_combination(board, combination, player):
@@ -47,8 +133,16 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    pass
 
+    # Loop through all positions in the combination given.
+    for position in combination:
+        # If current position isn't filled with the player's Symbol,
+        # return false.
+        if board[position[0]][position[1]] != player:
+            return False
+    # If there's no False return, then it checks as a True statement
+    # and the player won the game.
+    return True
 
 def _check_winning_combinations(board, player):
     """
@@ -63,42 +157,25 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    pass
-
-
-# public interface
-def start_new_game(player1, player2):
-    """
-    Creates and returns a new game configuration.
-    """
-    pass
-
-
-def get_winner(game):
-    """
-    Returns the winner player if any, or None otherwise.
-    """
-    pass
-
-
-def move(game, player, position):
-    """
-    Performs a player movement in the game. Must ensure all the pre requisites
-    checks before the actual movement is done.
-    After registering the movement it must check if the game is over.
-    """
-    pass
-
-
-def get_board_as_string(game):
-    """
-    Returns a string representation of the game board in the current state.
-    """
-    pass
-
-
-def get_next_turn(game):
-    """
-    Returns the player who plays next, or None if the game is already over.
-    """
-    pass
+    
+    combinations = (
+        # Verticals
+        ((0,0), (1,0), (2,0)),
+        ((0,1), (1,1), (2,1)),
+        ((0,2), (1,2), (2,2)),
+        # Horizontal
+        ((0,0), (0,1), (0,2)),
+        ((1,0), (1,1), (1,2)),
+        ((2,0), (2,1), (2,2)),
+        # Diagonals
+        ((0,0),(1,1),(2,2)),
+        ((2,0),(1,1),(0,2)),
+        )
+    
+    # Looping through combinations
+    for combination in combinations:
+        # Use winning combination helper to check if there's any combination 
+        # in the board and return the player as a winner
+        if _is_winning_combination(board, combination, player):
+            return player
+    return None
