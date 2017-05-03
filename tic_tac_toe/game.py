@@ -107,7 +107,7 @@ def _position_is_valid(position):
     Returns True if given position is valid, False otherwise.
     """
     if isinstance(position, tuple) and len(position) == 2:
-        if len( filter (lambda x: 0 <= x <= 2, position)) == len(position):
+        if len(list(filter(lambda x: 0 <= x <= 2, position))) == len(position):
             return True
     return False
 
