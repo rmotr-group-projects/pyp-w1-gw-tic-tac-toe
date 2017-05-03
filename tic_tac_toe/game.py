@@ -1,4 +1,4 @@
-from exceptions import *
+from .exceptions import InvalidMovement, GameOver
 
 # Public functions (game starter, basic checks, make a move and such).
 def start_new_game(player1, player2):
