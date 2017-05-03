@@ -1,4 +1,5 @@
 from .exceptions import *
+import random
 
 # internal helpers
 def _position_is_empty_in_board(position, board):
@@ -37,6 +38,13 @@ def _board_is_full(board):
     """
     return all([square != "-" for row in board for square in row])
 
+def _filled_square_count(board):
+    """
+    Returns the number of occupied positions in the the given board.
+    
+    :param board: Game board.
+    """
+    return sum([square != "-" for row in board for square in row])
 
 def _is_winning_combination(board, combination, player):
     """
@@ -164,3 +172,12 @@ def get_next_turn(game):
         return None
     else:
         return game['next_turn']
+
+def computer_play(game):
+    """
+    Computer makes a random play as whoever's turn it is
+    """
+    position = (random.randint(0, 2), random.randint(0, 2))
+    while not _position_is_empty_in_board(position, game['board']):
+        position = (random.randint(0, 2), random.randint(0, 2))
+    move(game, game['next_turn'], position)

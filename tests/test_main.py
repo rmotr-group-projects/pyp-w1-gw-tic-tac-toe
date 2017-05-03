@@ -4,7 +4,8 @@ import unittest
 from tic_tac_toe import (
     start_new_game, get_board_as_string, move, get_winner,
     get_next_turn, _position_is_valid, _position_is_empty_in_board,
-    _board_is_full, _check_winning_combinations, _board_is_full,
+    _board_is_full, _check_winning_combinations, _board_is_full, 
+    computer_play, _filled_square_count,
     InvalidMovement, GameOver)
 
 
@@ -278,3 +279,12 @@ O  |  X  |  O
         self.assertEqual(get_next_turn(self.game), self.x)
         move(self.game, self.x, position=(0, 0))
         self.assertEqual(get_next_turn(self.game), self.o)
+        
+    def test_random_plays(self):
+        computer_play(self.game)
+        self.assertEqual(_filled_square_count(self.game['board']), 1)
+        computer_play(self.game)
+        self.assertEqual(_filled_square_count(self.game['board']), 2)
+        computer_play(self.game)
+        self.assertEqual(_filled_square_count(self.game['board']), 3)
+        
