@@ -1,4 +1,9 @@
-from itertools import (product)
+from __future__ import print_function
+from itertools import product
+import copy
+
+from tic_tac_toe.exceptions import *
+
 
 def check_axis(data, n):
     """Returns any values occurring n number of times"""
@@ -40,7 +45,7 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    if posistion not in generate_grid():
+    if position not in generate_grid():
         return False
     return True
 
@@ -101,7 +106,7 @@ def get_winner(game):
     """
     Returns the winner player if any, or None otherwise.
     """
-    pass
+    return game['winner']
 
 
 def move(game, player, position):
@@ -110,26 +115,52 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
-    if not _position_is_valid():
+    if not _position_is_valid(position):
         raise InvalidMovement('Position is Invalid.')
-    if not _position_is_empty_in_board():
-        raise InvalidMovement
+    if not _position_is_empty_in_board(posistion, game['board']):
+        raise InvalidMovement('Position is Already Taken.')
+    
+    row, col = position
+    
+    game['board'][row][col] = game[player]
+    
+    if not _check_winning_combinations(game['board'], player):
+        get_next_turn(game)
+        
 
-    pass
-
-
-def get_board_as_string(game):
+def get_board_as_string(game): 
     """
     Returns a string representation of the game board in the current state.
     """
-    pass
+    grid = generate_grid()
+    board = copy.deepcopy(game['board'])
+    
+    for row, col in grid:
+        if row % 2 == 0:
+            board[row][col] = "{}".format(game['board'][row][col])
+        else: 
+            board[row][col] = " | {} | ".format(game['board'][row][col])
+    
+    board.insert(1, '--------------')
+    board.insert(4, '--------------')
+    
+    for row in board:
+        string_board += '\n{}\n'
+
+    
+    return game['board']
 
 
 def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    pass
+    
+    if not game['winner']:
+        if game['next_turn'] == player1:
+            game['next_turn'] == player2
+        else:
+            game['next_turn'] == player1
 
 
 if __name__ == '__main__':
