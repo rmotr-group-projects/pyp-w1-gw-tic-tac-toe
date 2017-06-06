@@ -1,4 +1,16 @@
-# internal helpers
+from itertools import (product)
+
+def check_axis(data, n):
+    """Returns any values occurring n number of times"""
+
+    return len([x for x in data if data.count(x) == n])
+
+def generate_grid():
+    """Returns 3x3 grid coordinates as a tuple of tuples"""
+
+    return ((row, col) for row, col in product(range(3), range(3)))
+
+
 def _position_is_empty_in_board(position, board):
     """
     Checks if given position is empty ("-") in the board.
@@ -9,7 +21,11 @@ def _position_is_empty_in_board(position, board):
 
     Returns True if given position is empty, False otherwise.
     """
-    pass
+
+    row, col = position
+    if board[row][col] == '-':
+        return True
+    return False
 
 
 def _position_is_valid(position):
@@ -24,7 +40,9 @@ def _position_is_valid(position):
 
     Returns True if given position is valid, False otherwise.
     """
-    pass
+    if posistion not in generate_grid():
+        return False
+    return True
 
 
 def _board_is_full(board):
@@ -33,45 +51,50 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    pass
+    grid = generate_grid()
+    if any(((row, col) in grid for row, col in grid if board[row][col] == '-')):
+        return False
 
-
-def _is_winning_combination(board, combination, player):
-    """
-    Checks if all 3 positions in given combination are occupied by given player.
-
-    :param board: Game board.
-    :param combination: Tuple containing three position elements.
-                        Example: ((0,0), (0,1), (0,2))
-
-    Returns True of all three positions in the combination belongs to given
-    player, False otherwise.
-    """
-    pass
-
+    return True
 
 def _check_winning_combinations(board, player):
     """
-    There are 8 posible combinations (3 horizontals, 3, verticals and 2 diagonals)
-    to win the Tic-tac-toe game.
-    This helper loops through all these combinations and checks if any of them
-    belongs to the given player.
+     Returns the player (winner) of any of the winning combinations is completed
+     by given player, or None otherwise.
 
-    :param board: Game board.
-    :param player: One of the two playing players.
+     :param board: Game board.
+     :param player: One of the two playing players.
 
-    Returns the player (winner) of any of the winning combinations is completed
-    by given player, or None otherwise.
-    """
-    pass
+     """
 
+    grid = generate_grid()
+    row, col = zip(*((row, col) for row, col in grid if board[row][col] == player))
 
-# public interface
+    if check_axis(row, 3) != 0 or check_axis(col, 3) != 0:
+        # horizontal /vertical moves
+        return player
+
+    if (1, 1) in zip(row, col):
+        # Diagonal moves
+        if ((0, 0) and (2, 2)) or ((2, 0) and (0, 2)) in zip(row, col):
+            return player
+
+    return False
+
 def start_new_game(player1, player2):
     """
     Creates and returns a new game configuration.
     """
-    pass
+
+    board = [['-' for i in range(3)] for i in range(3)]
+
+    return {
+            'player1': player1,
+            'player2': player2,
+            'board': board,
+            'next_turn': player1,
+            'winner': None
+            }
 
 
 def get_winner(game):
@@ -87,6 +110,11 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
+    if not _position_is_valid():
+        raise InvalidMovement('Position is Invalid.')
+    if not _position_is_empty_in_board():
+        raise InvalidMovement
+
     pass
 
 
@@ -102,3 +130,16 @@ def get_next_turn(game):
     Returns the player who plays next, or None if the game is already over.
     """
     pass
+
+
+if __name__ == '__main__':
+    a_board = [
+        ["X", "O", "X"],
+        ["X", "X", "O"],
+        ["O", "O", "X"],
+    ]
+    print(_check_winning_combinations(a_board, 'X'))
+    print(_board_is_full(a_board))
+
+
+
