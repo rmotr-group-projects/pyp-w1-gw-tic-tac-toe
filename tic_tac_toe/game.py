@@ -1,8 +1,10 @@
 from __future__ import print_function
 from itertools import product
-import copy
 
-from tic_tac_toe.exceptions import *
+try:
+    from tic_tac_toe.exceptions import *
+except ImportError:
+    from exceptions import *
 
 
 def check_axis(data, n):
@@ -116,8 +118,8 @@ def move(game, player, position):
     After registering the movement it must check if the game is over.
     """
     if not _position_is_valid(position):
-        raise InvalidMovement('Position is Invalid.')
-    if not _position_is_empty_in_board(posistion, game['board']):
+        raise InvalidMovement('Position out of range.')
+    if not _position_is_empty_in_board(position, game['board']):
         raise InvalidMovement('Position is Already Taken.')
     
     row, col = position
@@ -126,29 +128,24 @@ def move(game, player, position):
     
     if not _check_winning_combinations(game['board'], player):
         get_next_turn(game)
-        
-
-def get_board_as_string(game): 
+ 
+def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
     """
-    grid = generate_grid()
-    board = copy.deepcopy(game['board'])
-    
-    for row, col in grid:
-        if row % 2 == 0:
-            board[row][col] = "{}".format(game['board'][row][col])
-        else: 
-            board[row][col] = " | {} | ".format(game['board'][row][col])
-    
-    board.insert(1, '--------------')
-    board.insert(4, '--------------')
-    
-    for row in board:
-        string_board += '\n{}\n'
 
-    
-    return game['board']
+    str_board = '\n'
+    for row_dex, row in enumerate(game['board']):
+        for col_dex, col in enumerate(row):
+            if col_dex == 1:
+                str_board += '  |  {}  |  '.format(col)
+            else:
+                str_board += str(col)
+        if row_dex != 2:
+            str_board += '\n--------------\n'
+    str_board += '\n'
+
+    return str_board
 
 
 def get_next_turn(game):
@@ -164,13 +161,6 @@ def get_next_turn(game):
 
 
 if __name__ == '__main__':
-    a_board = [
-        ["X", "O", "X"],
-        ["X", "X", "O"],
-        ["O", "O", "X"],
-    ]
-    print(_check_winning_combinations(a_board, 'X'))
-    print(_board_is_full(a_board))
-
+    print(start_new_game('X', 'O'))
 
 
