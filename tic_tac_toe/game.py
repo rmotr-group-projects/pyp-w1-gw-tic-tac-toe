@@ -1,5 +1,6 @@
+from .exceptions import *
+
 # internal helpers
-from exceptions import *
 
 def _position_is_empty_in_board(position, board):
     """
@@ -42,9 +43,7 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    
-    
-    # return all([[item != '-' for item in line] for line in board]])
+
     return all([space != '-' for item in board for space in item])
 
 def _is_winning_combination(board, combination, player):
@@ -58,14 +57,14 @@ def _is_winning_combination(board, combination, player):
     Returns True of all three positions in the combination belongs to given
     player, False otherwise.
     """
-    
+
     for comb_pos1,comb_pos2 in combination:
         if board[comb_pos1][comb_pos2] != player:
             return False
-    
+
     return True
-        
-    
+
+
 
 def _check_winning_combinations(board, player):
     """
@@ -80,7 +79,7 @@ def _check_winning_combinations(board, player):
     Returns the player (winner) of any of the winning combinations is completed
     by given player, or None otherwise.
     """
-    
+
     zeros = [0,0,0]
     ones = [1,1,1]
     twos = [2,2,2]
@@ -105,7 +104,6 @@ def _check_winning_combinations(board, player):
             
     return None
 
-  
 
 # public interface
 def start_new_game(player1, player2):
@@ -131,11 +129,11 @@ def get_winner(game):
     Returns the winner player if any, or None otherwise.
     """ 
     if _check_winning_combinations(game['board'], game['player1']):
-        game['winner'] = player1
-        return player1
+        game['winner'] = game['player1']
+        return game['player1']
     elif _check_winning_combinations(game['board'], game['player2']):
-        game['winner'] = player2
-        return player2
+        game['winner'] = game['player2']
+        return game['player2']
     else:
         return None
 
@@ -148,14 +146,14 @@ def move(game, player, position):
     """
     if _board_is_full(game['board']) or game['winner']:
             raise InvalidMovement('Game is over.')
-        # elif not game['winner']:
-            # raise GameOver('Game is tied!')
     elif game['next_turn'] != player:
         raise InvalidMovement('"{}" moves next.'.format(game['next_turn']))
-    elif not _position_is_empty_in_board(position, game['board']):
-        raise InvalidMovement('Position already taken.')
     elif not _position_is_valid(position):
         raise InvalidMovement('Position out of range.')
+
+    elif not _position_is_empty_in_board(position, game['board']):
+        raise InvalidMovement('Position already taken.')
+
     
     game['board'][position[0]][position[1]] = player
     if game['next_turn'] == game['player1']:
@@ -166,7 +164,7 @@ def move(game, player, position):
 
     if _check_winning_combinations(game['board'], player):
         game['winner'] = player
-        raise GameOver()
+        raise GameOver('"{}" wins!'.format(player))
     elif _board_is_full(game['board']):
         raise GameOver("Game is tied!")
 
