@@ -1,12 +1,7 @@
 from __future__ import print_function
 from itertools import product
 
-# for local tests
-try:
-    from tic_tac_toe.exceptions import *
-except ImportError:
-    from exceptions import *
-
+from tic_tac_toe.exceptions import *
 
 
 def check_axis(axis, n):
@@ -15,17 +10,6 @@ def check_axis(axis, n):
     if len([x for x in axis if axis.count(x) == n]) > 0:
         return True
 
-def check_diagonal_moves(moves, board):
-    """Returns True if player's moves travel unbroken from corner to corner"""
-    grid = generate_grid()
-    center = [int((len(board) - 1) / 2)] * 2
-
-    if tuple(center) in moves:
-        upper_l, upper_r = grid[0], grid[-1]
-        if (upper_l and upper_r in moves) or (lower_l and lower_r in moves):
-            return True
-    else:
-        return False
 
 def generate_grid():
     """Returns 3x3 grid coordinates as a tuple of tuples"""
@@ -97,14 +81,17 @@ def _check_winning_combinations(board, player):
 
     if check_axis(row, 3) or check_axis(col, 3):
         # horizontal/vertical moves
-        raise GameOver('"{}" wins!'.format(player))
+        return player
 
-    # only check diagonal moves when height/width is an odd number
-    if len(board) % 2 != 0:
-        if check_diagonal_moves(zip(row,col), board):
-            raise GameOver('"{}" wins!'.format(player))
+    moves = set(zip(row, col))
+    diagonals = [set(((0, 0), (1, 1), (2, 2))), set(((0, 2), (1, 1), (2, 0)))]
+    for diagonal in diagonals:
+        if diagonal.issubset(moves):
+            # diagonal moves
+            return player
 
     return None
+
 
 def start_new_game(player1, player2):
     """
@@ -114,15 +101,15 @@ def start_new_game(player1, player2):
     board = [['-' for i in range(3)] for i in range(3)]
 
     return {
-            'player1': player1,
-            'player2': player2,
-            'board': board,
-            'next_turn': player1,
-            'winner': None
-            }
+        'player1': player1,
+        'player2': player2,
+        'board': board,
+        'next_turn': player1,
+        'winner': None
+    }
 
 
-def get_winner(game):
+def get_winner(game, set_winner=False):
     """
     Returns the winner player if any, or None otherwise.
     """
@@ -135,22 +122,29 @@ def move(game, player, position):
     checks before the actual movement is done.
     After registering the movement it must check if the game is over.
     """
+    if game['winner'] or _board_is_full(game['board']):
+        raise InvalidMovement('Game is over.')
     if not _position_is_valid(position):
         raise InvalidMovement('Position out of range.')
     if not _position_is_empty_in_board(position, game['board']):
         raise InvalidMovement('Position already taken.')
-
     if game['next_turn'] != player:
         raise InvalidMovement('"{}" moves next'.format(game['next_turn']))
 
-    if _board_is_full(game['board']) and not game['winner']:
-        raise GameOver('Game is Tied!')
-
-
+    row, col = position
     game['board'][row][col] = player
 
-    if not _check_winning_combinations(game['board'], player):
+    game['winner'] = _check_winning_combinations(game['board'], player)
+
+    if game['winner']:
+        game['next_turn'] = None
+        raise GameOver('"{}" wins!'.format(game['winner']))
+    elif _board_is_full(game['board']):
+        game['next_turn'] = None
+        raise GameOver('Game is tied!')
+    else:
         get_next_turn(game, update=True)
+
 
 def get_board_as_string(game):
     """
@@ -183,8 +177,5 @@ def get_next_turn(game, update=False):
             game['next_turn'] = game['player1']
     else:
         return game['next_turn']
-
-
-
 
 
