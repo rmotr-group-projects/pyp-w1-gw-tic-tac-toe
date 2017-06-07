@@ -120,11 +120,14 @@ def move(game, player, position):
     if not _position_is_valid(position):
         raise InvalidMovement('Position out of range.')
     if not _position_is_empty_in_board(position, game['board']):
-        raise InvalidMovement('Position is Already Taken.')
+        raise InvalidMovement('Position already taken.')
+    
+    if game['next_turn'] != player:
+        raise InvalidMovement('"{}" moves next'.format(player))
+    
     
     row, col = position
-    
-    game['board'][row][col] = game[player]
+    game['board'][row][col] = player
     
     if not _check_winning_combinations(game['board'], player):
         get_next_turn(game)
@@ -154,10 +157,10 @@ def get_next_turn(game):
     """
     
     if not game['winner']:
-        if game['next_turn'] == player1:
-            game['next_turn'] == player2
+        if game['next_turn'] == game['player1']:
+            game['next_turn'] = game['player2']
         else:
-            game['next_turn'] == player1
+            game['next_turn'] = game['player1']
 
 
 if __name__ == '__main__':
