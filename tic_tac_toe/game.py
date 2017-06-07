@@ -1,17 +1,31 @@
 from __future__ import print_function
 from itertools import product
-from pprint import pprint
 
+# for local tests
 try:
     from tic_tac_toe.exceptions import *
 except ImportError:
     from exceptions import *
 
 
-def check_axis(data, n):
+
+def check_axis(axis, n):
     """Returns any values occurring n number of times"""
 
-    return len([x for x in data if data.count(x) == n])
+    if len([x for x in axis if axis.count(x) == n]) > 0:
+        return True
+
+def check_diagonal_moves(moves, board):
+    """Returns True if player's moves travel unbroken from corner to corner"""
+    grid = generate_grid()
+    center = [int((len(board) - 1) / 2)] * 2
+
+    if tuple(center) in moves:
+        upper_l, upper_r = grid[0], grid[-1]
+        if (upper_l and upper_r in moves) or (lower_l and lower_r in moves):
+            return True
+    else:
+        return False
 
 def generate_grid():
     """Returns 3x3 grid coordinates as a tuple of tuples"""
@@ -33,7 +47,8 @@ def _position_is_empty_in_board(position, board):
     row, col = position
     if board[row][col] == '-':
         return True
-    return False
+    else:
+        return False
 
 
 def _position_is_valid(position):
@@ -50,7 +65,8 @@ def _position_is_valid(position):
     """
     if position not in generate_grid():
         return False
-    return True
+    else:
+        return True
 
 
 def _board_is_full(board):
@@ -59,11 +75,12 @@ def _board_is_full(board):
 
     :param board: Game board.
     """
-    grid = generate_grid()
-    if any(((row, col) in grid for row, col in grid if board[row][col] == '-')):
+
+    if any(row for row in board if '-' in row):
         return False
 
     return True
+
 
 def _check_winning_combinations(board, player):
     """
@@ -78,16 +95,16 @@ def _check_winning_combinations(board, player):
     grid = generate_grid()
     row, col = zip(*((row, col) for row, col in grid if board[row][col] == player))
 
-    if check_axis(row, 3) != 0 or check_axis(col, 3) != 0:
-        # horizontal /vertical moves
-        return player
+    if check_axis(row, 3) or check_axis(col, 3):
+        # horizontal/vertical moves
+        raise GameOver('"{}" wins!'.format(player))
 
-    if (1, 1) in zip(row, col):
-        # Diagonal moves
-        if ((0, 0) and (2, 2)) or ((2, 0) and (0, 2)) in zip(row, col):
-            return player
+    # only check diagonal moves when height/width is an odd number
+    if len(board) % 2 != 0:
+        if check_diagonal_moves(zip(row,col), board):
+            raise GameOver('"{}" wins!'.format(player))
 
-    return False
+    return None
 
 def start_new_game(player1, player2):
     """
@@ -126,12 +143,14 @@ def move(game, player, position):
     if game['next_turn'] != player:
         raise InvalidMovement('"{}" moves next'.format(game['next_turn']))
 
+    if _board_is_full(game['board']) and not game['winner']:
+        raise GameOver('Game is Tied!')
 
-    row, col = position
+
     game['board'][row][col] = player
 
     if not _check_winning_combinations(game['board'], player):
-        get_next_turn(game)
+        get_next_turn(game, update=True)
 
 def get_board_as_string(game):
     """
@@ -152,25 +171,20 @@ def get_board_as_string(game):
     return str_board
 
 
-def get_next_turn(game):
+def get_next_turn(game, update=False):
     """
     Returns the player who plays next, or None if the game is already over.
     """
 
-    if not game['winner']:
+    if not game['winner'] and update:
         if game['next_turn'] == game['player1']:
             game['next_turn'] = game['player2']
         else:
             game['next_turn'] = game['player1']
+    else:
+        return game['next_turn']
 
 
-if __name__ == '__main__':
-    player1 = 'X'
-    player2 = 'O'
 
-    a_game = start_new_game(player1, player2)
-    move(a_game, player1, (0,0))
-    pprint(a_game)
-    move(a_game, player1, (1,0))
 
 
