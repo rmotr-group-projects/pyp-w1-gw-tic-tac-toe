@@ -1,5 +1,6 @@
 from __future__ import print_function
 from itertools import product
+from pprint import pprint
 
 try:
     from tic_tac_toe.exceptions import *
@@ -121,17 +122,17 @@ def move(game, player, position):
         raise InvalidMovement('Position out of range.')
     if not _position_is_empty_in_board(position, game['board']):
         raise InvalidMovement('Position already taken.')
-    
+
     if game['next_turn'] != player:
-        raise InvalidMovement('"{}" moves next'.format(player))
-    
-    
+        raise InvalidMovement('"{}" moves next'.format(game['next_turn']))
+
+
     row, col = position
     game['board'][row][col] = player
-    
+
     if not _check_winning_combinations(game['board'], player):
         get_next_turn(game)
- 
+
 def get_board_as_string(game):
     """
     Returns a string representation of the game board in the current state.
@@ -155,7 +156,7 @@ def get_next_turn(game):
     """
     Returns the player who plays next, or None if the game is already over.
     """
-    
+
     if not game['winner']:
         if game['next_turn'] == game['player1']:
             game['next_turn'] = game['player2']
@@ -164,6 +165,12 @@ def get_next_turn(game):
 
 
 if __name__ == '__main__':
-    print(start_new_game('X', 'O'))
+    player1 = 'X'
+    player2 = 'O'
+
+    a_game = start_new_game(player1, player2)
+    move(a_game, player1, (0,0))
+    pprint(a_game)
+    move(a_game, player1, (1,0))
 
 
